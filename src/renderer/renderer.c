@@ -20,6 +20,7 @@
 #include "../../include/vec.h"
 #include "../../include/vue.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 t_list *get_intersections(t_list *objs, t_ray *ray, int x, int y);
 void    put_intersections(t_list *intersections, t_image *image);
@@ -36,6 +37,7 @@ void    render(t_vue *vue, t_scene *scene)
 	ray.origin.x = scene->camera->coordinates.x;
 	ray.origin.y = scene->camera->coordinates.y;
 	ray.origin.z = scene->camera->coordinates.z;
+	printf("%lf\n", ray.origin.z);
 	top_left = top_left_corner(scene->camera);
 	image = image_init(vue);
 	while (i < VUE_HEIGHT)

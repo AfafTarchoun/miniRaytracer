@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 18:31:34 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/20 03:42:00 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/11/20 18:05:00 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../include/image.h"
 // #include "libft.h"
 #include "mlx.h"
+#include <math.h>
 #include "../include/renderer.h"
 #include "../include/types.h"
 #include "../include/vue.h"
@@ -42,17 +43,34 @@ void print_usage()
 // 	return (scene);
 // }
 
-int	ft_strcmp(char *s1, char *s2)
+double ft_atod(char *line)
 {
-	int i;
+	double num;
+	int sign;
+	char *pos;
 
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
-		i++;
-	return (s1[i] - s2[i]);
+	pos = 0;
+	sign = 1;
+	num = 0;
+	if(*line == '-')
+	{
+		sign = -1;
+		++(line);
+	}
+	while(ft_isdigit(*line) || *line == '.')
+	{
+		if (*line == '.')
+			pos = (line + 1);
+		else
+			num = num * 10 + (*line - '0');
+		++(line);
+	}
+	// if (!pos)
+		// return (num * sign);
+	return (num / pow(10, line - pos) * sign) ;
 }
 
-void parse_cam(char *line, t_scene *scene)
+t_scene *parse_cam(char *line, t_scene *scene)
 {
 	char **tab;
 	char **coord;
@@ -62,17 +80,17 @@ void parse_cam(char *line, t_scene *scene)
 	tab = ft_split(line, '|');
 	coord = ft_split(tab[1], ' ');
 	orio = ft_split(tab[2], ' ');
-	scene->camera->fov = atof(tab[3]);
-	scene->camera->coordinates.x = atof(coord[0]);
-	scene->camera->coordinates.y = atof(coord[1]);
-	scene->camera->coordinates.z = atof(coord[2]);
-	scene->camera->orientation.x = atof(orio[0]);
-	scene->camera->orientation.y = atof(orio[1]);
-	scene->camera->orientation.z = atof(orio[2]);
-	return ;
+	scene->camera->fov = ft_atod(tab[3]);
+	scene->camera->coordinates.x = ft_atod(coord[0]);
+	scene->camera->coordinates.y = ft_atod(coord[1]);
+	scene->camera->coordinates.z = ft_atod(coord[2]);
+	scene->camera->orientation.x = ft_atod(orio[0]);
+	scene->camera->orientation.y = ft_atod(orio[1]);
+	scene->camera->orientation.z = ft_atod(orio[2]);
+	return (scene);
 }
 
-void parse_ambient(char *line, t_scene *scene)
+t_scene *parse_ambient(char *line, t_scene *scene)
 {
 	char **tab;
 	char **col;
@@ -80,14 +98,14 @@ void parse_ambient(char *line, t_scene *scene)
 	scene->ambient_light = ft_calloc(1, sizeof(t_ambient_light_attr));
 	tab = ft_split(line, '|');
 	col = ft_split(tab[2], ' ');
-	scene->ambient_light->ratio = atof(tab[1]);
-	scene->ambient_light->color.x = atof(col[0]);
-	scene->ambient_light->color.y = atof(col[1]);
-	scene->ambient_light->color.z = atof(col[2]);
-	return ;
+	scene->ambient_light->ratio = ft_atod(tab[1]);
+	scene->ambient_light->color.x = ft_atod(col[0]);
+	scene->ambient_light->color.y = ft_atod(col[1]);
+	scene->ambient_light->color.z = ft_atod(col[2]);
+	return (scene);
 }
 
-void parse_light(char *line, t_scene *scene)
+t_scene *parse_light(char *line, t_scene *scene)
 {
 	char **tab;
 	char **coord;
@@ -95,107 +113,154 @@ void parse_light(char *line, t_scene *scene)
 	scene->light = ft_calloc(1, sizeof(t_light_attr));
 	tab = ft_split(line, '|');
 	coord = ft_split(tab[1], ' ');
-	scene->light->brightness = atof(tab[3]);
-	scene->light->coordinates.x = atof(coord[0]);
-	scene->light->coordinates.y = atof(coord[1]);
-	scene->light->coordinates.z = atof(coord[2]);
-	return ;
+	scene->light->brightness = ft_atod(tab[2]);
+	scene->light->coordinates.x = ft_atod(coord[0]);
+	scene->light->coordinates.y = ft_atod(coord[1]);
+	scene->light->coordinates.z = ft_atod(coord[2]);
+	return (scene);
 }
-void parse_sphere(char *line)
+
+t_shape *parse_sphere(char *line)
 {
 	t_sphere_attr *sp;
+	t_shape *shape;
 	char **tab;
 	char **coord;
 	char **col;
 
+	shape = ft_calloc(1, sizeof(t_shape));
 	sp = malloc(sizeof(t_sphere_attr));
 	tab = ft_split(line, '|');
 	coord = ft_split(tab[1], ' ');
 	col = ft_split(tab[3], ' ');
-	sp->diameter = atof(tab[2]);
-	sp->coordinates.x = atof(coord[0]);
-	sp->coordinates.y = atof(coord[1]);
-	sp->coordinates.z = atof(coord[2]);
-	sp->color.x = atof(col[0]);
-	sp->color.y = atof(col[1]);
-	sp->color.z = atof(col[2]);
-	return ;
+	sp->diameter = ft_atod(tab[2]);
+	sp->coordinates.x = ft_atod(coord[0]);
+	sp->coordinates.y = ft_atod(coord[1]);
+	sp->coordinates.z = ft_atod(coord[2]);
+	sp->color.x = ft_atod(col[0]);
+	sp->color.y = ft_atod(col[1]);
+	sp->color.z = ft_atod(col[2]);
+	shape->type = SPHERE;
+	shape->attr = sp;
+	return (shape);
 }
 
-void parse_plane(char *line)
+t_shape *parse_plane(char *line)
 {
 	t_plane_attr *pl;
+	t_shape *shape;
 	char **tab;
 	char **coord;
 	char **orio;
 	char **col;
-	
+
+	shape = ft_calloc(1, sizeof(t_shape));
 	pl = malloc(sizeof(t_plane_attr));
 	tab = ft_split(line, '|');
 	coord = ft_split(tab[1], ' ');
 	orio = ft_split(tab[2], ' ');
 	col = ft_split(tab[3], ' ');
-	pl->coordinates.x = atof(coord[0]);
-	pl->coordinates.y = atof(coord[1]);
-	pl->coordinates.z = atof(coord[2]);
-	pl->orientation.x = atof(orio[0]);
-	pl->orientation.y = atof(orio[1]);
-	pl->orientation.z = atof(orio[2]);
-	pl->color.x = atof(col[0]);
-	pl->color.y = atof(col[1]);
-	pl->color.z = atof(col[2]);
-	return ;
+	pl->coordinates.x = ft_atod(coord[0]);
+	pl->coordinates.y = ft_atod(coord[1]);
+	pl->coordinates.z = ft_atod(coord[2]);
+	pl->orientation.x = ft_atod(orio[0]);
+	pl->orientation.y = ft_atod(orio[1]);
+	pl->orientation.z = ft_atod(orio[2]);
+	pl->color.x = ft_atod(col[0]);
+	pl->color.y = ft_atod(col[1]);
+	pl->color.z = ft_atod(col[2]);
+	shape->type = PLANE;
+	shape->attr = pl;
+	return (shape);
 }
 
-void parse_cylinder(char *line)
+t_shape *parse_cylinder(char *line)
 {
 	t_cylinder_attr *cy;
+	t_shape *shape;
 	char **tab;
 	char **coord;
 	char **orio;
 	char **col;
-	
+
+	shape = ft_calloc(1, sizeof(t_shape));
 	cy = malloc(sizeof(t_cylinder_attr));
 	tab = ft_split(line, '|');
 	coord = ft_split(tab[1], ' ');
 	orio = ft_split(tab[2], ' ');
 	col = ft_split(tab[5], ' ');
-	cy->diameter = atof(tab[3]);
-	cy->height = atof(tab[4]);
-	cy->coordinates.x = atof(coord[0]);
-	cy->coordinates.y = atof(coord[1]);
-	cy->coordinates.z = atof(coord[2]);
-	cy->orientation.x = atof(orio[0]);
-	cy->orientation.y = atof(orio[1]);
-	cy->orientation.z = atof(orio[2]);
-	cy->color.x = atof(col[0]);
-	cy->color.y = atof(col[1]);
-	cy->color.z = atof(col[2]);
-	return ;
+	cy->diameter = ft_atod(tab[3]);
+	cy->height = ft_atod(tab[4]);
+	cy->coordinates.x = ft_atod(coord[0]);
+	cy->coordinates.y = ft_atod(coord[1]);
+	cy->coordinates.z = ft_atod(coord[2]);
+	cy->orientation.x = ft_atod(orio[0]);
+	cy->orientation.y = ft_atod(orio[1]);
+	cy->orientation.z = ft_atod(orio[2]);
+	cy->color.x = ft_atod(col[0]);
+	cy->color.y = ft_atod(col[1]);
+	cy->color.z = ft_atod(col[2]);
+	shape->type = CYLINDER;
+	shape->attr = cy;
+	return (shape);
 }
 
-void parse_obj(char *line)
+// t_scene *not_objs(char *line, t_scene *scene)
+// {
+// 	if (line[0] == 'C' && line[1] == '|')
+// 		scene = parse_cam(line, scene);
+// 	if (line[0] == 'A')
+// 		scene = parse_ambient(line, scene);
+// 	if (line[0] == 'L')
+// 		scene = parse_light(line,scene);
+// 	return (scene);
+// }
+
+// t_scene *parse_objs(char *line, t_scene *scene)
+// {
+// 	t_shape *shape;
+
+// 	shape = NULL;
+// 	if (line[0] == 'C' && line[1] == '|')
+// 		scene = parse_cam(line, scene);
+// 	else if (line[0] == 'A')
+// 		scene = parse_ambient(line, scene);
+// 	else if (line[0] == 'L')
+// 		scene = parse_light(line,scene);
+// 	else if (line[0] == 'S' && line[1] == 'P')
+// 		shape = parse_sphere(line);
+// 	else if (line[0] == 'P' && line[1] == 'L')
+// 		shape = parse_plane(line);
+// 	else if (line[0] == 'C' && line[1] == 'Y')
+// 		shape = parse_cylinder(line);
+// 	if (shape != NULL)
+// 		ft_lstadd_back(&scene->objects, ft_lstnew(shape));
+// 	return (scene);
+// }
+
+t_scene *parse_line(char *line, t_scene *scene)
 {
-	t_scene *scene;
-	
-	scene = ft_calloc(1, sizeof(t_scene));
+	t_shape *shape;
+
+	shape = NULL;
 	if (line[0] == 'C' && line[1] == '|')
-		parse_cam(line, scene);
+		scene = parse_cam(line, scene);
 	else if (line[0] == 'A')
-		parse_ambient(line, scene);
+		scene = parse_ambient(line, scene);
 	else if (line[0] == 'L')
-		parse_light(line,scene);
+		scene = parse_light(line,scene);
 	else if (line[0] == 'S' && line[1] == 'P')
-		parse_sphere(line);
-	// else if (line[0] == 'P' && line[1] == 'L')
-	// 	parse_plane(line);
-	// else if (line[0] == 'C' && line[1] == 'Y')
-	// 	parse_cylinder(line);
-	else
-		return ;
+		shape = parse_sphere(line);
+	else if (line[0] == 'P' && line[1] == 'L')
+		shape = parse_plane(line);
+	else if (line[0] == 'C' && line[1] == 'Y')
+		shape = parse_cylinder(line);
+	if (shape != NULL)
+		ft_lstadd_back(&scene->objects, ft_lstnew(shape));
+	return (scene);
 }
 
-void parse_file(char *file)
+t_scene *parse_file(char *file, t_scene *scene)
 {
     int fd;
     char *line;
@@ -209,19 +274,11 @@ void parse_file(char *file)
     while((line = get_next_line(fd)) > 0)
     {
         if (line[0] != '\0')
-			parse_obj(line);
-        // free (line);
+			scene = parse_line(line, scene);
+        free(line);
     }
     close(fd);
-    return ;
-}
-
-t_scene *simple_scene()
-{
-	t_scene *scene;
-
-	scene = ft_calloc(1, sizeof(t_scene));
-	return (scene);
+    return(scene);
 }
 
 int main(int argc, char *argv[])
@@ -234,9 +291,9 @@ int main(int argc, char *argv[])
 		print_usage();
 		return (1);
 	}
-	// (void) argv;
-	parse_file(argv[1]);
-	scene = simple_scene();
+	write(1, "hi", 2);
+	scene = ft_calloc(1, sizeof(t_scene));
+	scene = parse_file(argv[1], scene);
 	vue = vue_init();
 	render(vue, scene);
 	mlx_loop(vue->mlx);

@@ -37,7 +37,6 @@ void    render(t_vue *vue, t_scene *scene)
 	ray.origin.x = scene->camera->coordinates.x;
 	ray.origin.y = scene->camera->coordinates.y;
 	ray.origin.z = scene->camera->coordinates.z;
-	printf("%lf\n", ray.origin.z);
 	top_left = top_left_corner(scene->camera);
 	image = image_init(vue);
 	while (i < VUE_HEIGHT)

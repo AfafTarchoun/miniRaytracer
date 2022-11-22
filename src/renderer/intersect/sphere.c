@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 11:55:48 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/20 22:31:15 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/11/20 23:09:48 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ t_intersection *sphere_intersection(t_sphere_attr *sphere, t_ray *ray, int x, in
 	float           c;
 	t_intersection *intersection;
 
-	printf("col:%lf\n", sphere->diameter);
 	oc = vec3_sub(&ray->origin, &sphere->coordinates, NULL, NULL);
 	a = vec3_dot_product(&ray->direction, &ray->direction);
 	b = 2.0 * vec3_dot_product(oc, &ray->direction);

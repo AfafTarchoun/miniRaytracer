@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 18:31:34 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/22 12:25:42 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/11/22 15:03:30 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,18 @@ t_vec3 init_vec(double x, double y, double z)
 	return(res);
 }
 
+void free_tab(char **tab)
+{
+	int i =0;
+
+	while(tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
 t_scene *parse_cam(char *line, t_scene *scene)
 {
 	char **tab;
@@ -64,6 +76,9 @@ t_scene *parse_cam(char *line, t_scene *scene)
 	scene->camera->fov = (double)atof(tab[3]);
 	scene->camera->coordinates = init_vec((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
 	scene->camera->orientation = init_vec((double)atof(orio[0]), (double)atof(orio[1]), (double)atof(orio[2]));
+	free_tab(orio);
+	free_tab(coord);
+	free_tab(tab);
 	return (scene);
 }
 
@@ -83,6 +98,8 @@ t_scene *parse_ambient(char *line, t_scene *scene)
 		return NULL;
 	scene->ambient_light->ratio = (double)atof(tab[1]);
 	scene->ambient_light->color = init_vec((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
+	free_tab(col);
+	free_tab(tab);
 	return (scene);
 }
 
@@ -102,6 +119,8 @@ t_scene *parse_light(char *line, t_scene *scene)
 		return NULL;
 	scene->light->brightness = (double)atof(tab[2]);
 	scene->light->coordinates = init_vec((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
+	free_tab(coord);
+	free_tab(tab);
 	return (scene);
 }
 
@@ -134,6 +153,9 @@ t_shape *parse_sphere(char *line)
 	sp->color = init_vec((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
 	shape->type = SPHERE;
 	shape->attr = sp;
+	free_tab(coord);
+	free_tab(col);
+	free_tab(tab);
 	return (shape);
 }
 
@@ -173,6 +195,10 @@ t_shape *parse_plane(char *line)
 	pl->color = init_vec((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
 	shape->type = PLANE;
 	shape->attr = pl;
+	free_tab(coord);
+	free_tab(orio);
+	free_tab(col);
+	free_tab(tab);
 	return (shape);
 }
 
@@ -214,6 +240,10 @@ t_shape *parse_cylinder(char *line)
 	cy->color = init_vec((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
 	shape->type = CYLINDER;
 	shape->attr = cy;
+	free_tab(col);
+	free_tab(orio);
+	free_tab(coord);
+	free_tab(tab);
 	return (shape);
 }
 
@@ -289,10 +319,13 @@ int	ft_isdouble(char *src)
 
 char *no_newline(char *line)
 {
-	int i = 0;
+	int i;
+	char *new;
+	
+	i = 0;
 	while (line[i] && line[i] != '\n')
 		i++;
-	char *new = malloc(sizeof(char) * (i + 1));
+	new = malloc(sizeof(char) * (i + 1));
 	i = -1;
 	while (line[++i] && line[i] != '\n')
 		new[i] = line[i];
@@ -304,12 +337,12 @@ int check_fields_pipe(char *line, int nb)
 {
 	char **fields;
 	char **info;
+	char *new;
 	int i;
 	int j;
 	
 	i = 0;
-	j = 0;
-	char *new = no_newline(line);
+	new = no_newline(line);
 	fields = ft_split(new, '|');
 	while(fields[i])
 		i++;
@@ -329,6 +362,9 @@ int check_fields_pipe(char *line, int nb)
 		j = 0;
 		i++;
 	}
+	free_tab(fields);
+	free_tab(info);
+	free(new);
 	return (1);
 }
 
@@ -400,6 +436,7 @@ int error_management(char *file)
 			free(line);
 			return (0);
 		}
+		free(line);
     }
     close(fd);
     return(1);
@@ -433,7 +470,7 @@ t_scene *parse_file(char *file, t_scene *scene)
 int main(int argc, char *argv[])
 {
 	t_scene *scene;
-	t_vue   *vue;
+	// t_vue   *vue;
 
 	if (argc != 2)
 	{
@@ -448,8 +485,10 @@ int main(int argc, char *argv[])
 	scene = parse_file(argv[1], scene);
 	if(!scene)
 		return 0;
-	vue = vue_init();
-	render(vue, scene);
-	mlx_loop(vue->mlx);
+	// vue = vue_init();
+	// render(vue, scene);
+	// mlx_loop(vue->mlx);
+	free(scene);
+	system("leaks minirt");
 	return (0);
 }

@@ -6,33 +6,13 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 17:46:54 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/20 02:19:21 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/02 19:46:11 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPES_H
 #define TYPES_H
-# include "../libs/libft/libft.h"
-
-typedef struct s_vue
-{
-	void *mlx;
-	void *window;
-} t_vue;
-
-typedef struct s_vec3
-{
-	double x;
-	double y;
-	double z;
-} t_vec3;
-
-typedef struct s_ray
-{
-	t_vec3 origin;
-	t_vec3 direction;
-	double t;
-} t_ray;
+#include "libft.h"
 
 typedef struct s_image
 {
@@ -43,97 +23,123 @@ typedef struct s_image
 	int   endian;
 } t_image;
 
-typedef struct s_camera
-{
-	t_vec3 *origin;
-	t_vec3 *horizontal;
-	t_vec3 *vertical;
-	t_vec3 *lower_left_corner;
-	double  focal_length;
-	double  view_port_hight;
-	double  view_port_width;
-} t_camera;
-
-typedef enum e_shape_type
-{
-	AMBIENT_LIGHT,
-	CAMERA,
-	LIGHT,
-	SPHERE,
-	PLANE,
-	CYLINDER,
-	UNKNOWN
-} t_shape_type;
-
-typedef struct s_shape
-{
-	t_shape_type type;
-	void        *attr;
-} t_shape;
-
-typedef struct s_ambient_light_attr
-{
-	t_vec3 color;
-	double ratio;
-} t_ambient_light_attr;
-
-typedef struct s_camera_attr
-{
-	t_vec3 coordinates;
-	t_vec3 orientation;
-	double fov;
-} t_camera_attr;
-
-typedef struct s_light_attr
-{
-	t_vec3 coordinates;
-	double brightness;
-} t_light_attr;
-
-typedef struct s_sphere_attr
-{
-	t_vec3 coordinates;
-	t_vec3 color;
-	double diameter;
-} t_sphere_attr;
-
-typedef struct s_plane_attr
-{
-	t_vec3 coordinates;
-	t_vec3 orientation;
-	t_vec3 color;
-} t_plane_attr;
-
-typedef struct s_cylinder_attr
-{
-	t_vec3 coordinates;
-	t_vec3 orientation;
-	t_vec3 color;
-	double diameter;
-	double height;
-} t_cylinder_attr;
-
 typedef enum e_bool
 {
 	false,
 	true
 } t_bool;
 
-typedef struct s_scene
+typedef struct s_vue
 {
-	t_camera_attr        *camera;
-	t_light_attr         *light;
-	t_ambient_light_attr *ambient_light;
-	t_list	           *objects;
-} t_scene;
+	void *mlx;
+	void *window;
+} t_vue;
 
-typedef struct s_intersection
+typedef struct s_tuple
 {
-	double   t1;
-	double   t2;
-	int      x;
-	int      y;
-	t_shape *shape;
-} t_intersection;
+	float x;
+	float y;
+	float z;
+	float w;
+} t_tuple;
+
+typedef t_tuple t_point;
+typedef t_tuple t_vector;
+typedef t_tuple t_color;
+
+typedef struct s_ray
+{
+	t_point  *origin;
+	t_vector *dir;
+} t_ray;
+
+typedef enum e_entity_type
+{
+	SPHERE,
+	PLANE,
+	CYLINDER
+} t_entity_type;
+
+typedef struct s_entity
+{
+	t_entity_type type;
+	void	     *obj;
+} t_entity;
+
+typedef struct s_material
+{
+	t_color *color;
+	float    ambient;
+	float    deffuse;
+	float    specular;
+	float    shininess;
+} t_material;
+
+typedef struct s_sphere
+{
+	t_point    *origin;
+	t_point		*coord;
+	float       raduis;
+	int         id;
+	float     **transform;
+	t_material *material;
+} t_sphere;
+
+typedef struct s_plane
+{
+	t_point	*origin;
+	t_point *orient;
+	t_material *material;
+} t_plane;
+
+typedef struct s_cylinder
+{
+	t_point	*origin;
+	t_point *orient;
+	t_material *material;
+	float     **transform;
+	double diameter;
+	double height;
+} t_cylinder;
+
+typedef struct s_hit
+{
+	float     t1;
+	float     t2;
+	t_entity *entity;
+} t_hit;
+
+typedef struct s_light
+{
+	t_point	*origin;
+	double brightness;
+} t_light;
+
+typedef struct s_a_light
+{
+	t_material *material;
+	double ratio;
+} t_a_light;
+
+typedef struct s_camera
+{
+	t_point	*origin;
+	t_point	*orient;
+	int     hsize;
+	int     wsize;
+	float   psize;
+	double   fov;
+	float   half_w;
+	float   half_h;
+	float **transform;
+} t_camera;
+
+typedef struct s_world
+{
+	// t_light   *light;
+	// t_a_light *alight;
+	t_camera *camera;
+	t_list    *objs;
+} t_world;
 
 #endif // MINIRT_TYPES_H

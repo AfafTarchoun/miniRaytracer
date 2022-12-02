@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 12:21:58 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/19 21:46:43 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/10/01 14:55:09 by habouiba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #ifndef GET_NEXT_LINE_H
 #define GET_NEXT_LINE_H
-#include "../libft/libft.h"
+#include "libft.h"
 #include <limits.h>
 #include <stddef.h>
 #include <stdio.h>

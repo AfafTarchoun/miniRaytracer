@@ -1,139 +1,96 @@
-/* ************************************************************************** */ /*                                                                            */
+/* ************************************************************************** */
+/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   renderer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@43.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/03 07:56:03 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/12 14:29:27 by habouiba         ###   ########.fr       */
+/*   Created: 2022/11/24 14:35:56 by habouiba          #+#    #+#             */
+/*   Updated: 2022/12/02 21:41:31 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/renderer.h"
-#include "../../include/color.h"
-#include "../../include/defs.h"
-#include "../../include/image.h"
-#include "../../libs/libft/libft.h"
-#include "mlx.h"
-#include "../../include/ray.h"
-#include "../../include/shapes/intersect.h"
-#include "../../include/vec.h"
-#include "../../include/vue.h"
+#include "renderer.h"
+#include "defs.h"
+#include "hit.h"
+#include "image.h"
+#include "matrix.h"
+#include "point.h"
+#include "ray.h"
 #include <stdio.h>
-#include <stdlib.h>
+#include "mlx.h"
 
-t_list *get_intersections(t_list *objs, t_ray *ray, int x, int y);
-void    put_intersections(t_list *intersections, t_image *image);
-void    render(t_vue *vue, t_scene *scene)
+
+t_list *get_all_hits(t_list *objs, t_ray *ray)
 {
-	t_ray    ray;
-	int      i;
-	int      j;
-	t_image *image;
-	t_vec3  *top_left;
-	t_list  *intersections;
+	t_list   *hits;
+	t_hit    *hit;
+	t_entity *entity;
 
-	i = 0;
-	ray.origin.x = scene->camera->coordinates.x;
-	ray.origin.y = scene->camera->coordinates.y;
-	ray.origin.z = scene->camera->coordinates.z;
-	top_left = top_left_corner(scene->camera);
-	image = image_init(vue);
-	while (i < VUE_HEIGHT)
-	{
-		j = 0;
-		while (j < VUE_WIDTH)
-		{
-			ray.direction.x = top_left->x + j;
-			ray.direction.y = top_left->y + i;
-			ray.direction.z = top_left->z;
-			intersections = get_intersections(scene->objects, &ray, j, i);
-			put_intersections(intersections, image);
-			j++;
-		}
-		i++;
-	}
-	free(top_left);
-	mlx_put_image_to_window(vue->mlx, vue->window, image->img, 0, 0);
-}
-
-t_list *get_intersections(t_list *objs, t_ray *ray, int x, int y)
-{
-	t_shape        *shape;
-	t_list         *intersections;
-	t_intersection *intersect;
-
-	intersections = NULL;
+	hits = NULL;
 	while (objs)
 	{
-		shape = objs->content;
-		if (shape->type == SPHERE)
-		{
-			intersect = sphere_intersection(shape->attr, ray, x, y);
-			if (intersect)
-				ft_lstadd_back(&intersections, ft_lstnew(intersect));
-		}
-		else if (shape->type == PLANE)
-		{
-			intersect = plane_intersection(shape->attr, ray, x, y);
-			if (intersect)
-				ft_lstadd_back(&intersections, ft_lstnew(intersect));
-		}
-		else if (shape->type == CYLINDER)
-		{
-			intersect = cylinder_intersection(shape->attr, ray, x, y);
-			if (intersect)
-				ft_lstadd_back(&intersections, ft_lstnew(intersect));
-		}
+		hit = 0;
+		entity = objs->content;
+		if (entity->type == SPHERE)
+			hit = ray_sphere_hit(ray, entity->obj);
+		if (hit)
+			ft_lstadd_back(&hits, ft_lstnew(hit));
 		objs = objs->next;
 	}
-	return (intersections);
+	return (hits);
 }
 
-// void log_inters(t_intersection *inter)
-// {
-// 	printf("inter %p\n", inter);
-// 	printf("shape %p\n", inter->shape);
-// 	if (inter->shape->type == PLANE)
-// 		printf("type plane\n");
-// 	if (inter->shape->type == SPHERE)
-// 		printf("type sphere\n");
-// 	printf("attr %p\n", inter->shape->attr);
-// 	printf("x %i, y %i\n", inter->x, inter->y);
-// }
-
-void put_intersections(t_list *intersections, t_image *image)
+t_image *__render__(t_vue *vue, t_world *world, t_list ***hits)
 {
-	t_intersection *intersection;
-	t_sphere_attr  *sphere;
-	t_plane_attr   *plane;
-	t_cylinder_attr *cylinder;
+	t_image *image;
+	int      h;
+	int      w;
+	t_hit   *closest_hit;
 
-	// remove duplicate inters based on distance
-	while (intersections)
+	h = 0;
+	image = image_init(vue, world->camera);
+	while (h < world->camera->hsize)
 	{
-		intersection = intersections->content;
-		if (intersection->shape->type == SPHERE)
+		w = 0;
+		while (w < world->camera->wsize)
 		{
-			sphere = intersection->shape->attr;
-			image_put_pixel(
-			    image, intersection->x, intersection->y,
-			    create_trgb(0, sphere->color.x, sphere->color.y, sphere->color.z));
+			if (!hits[h][w])
+			{
+				w++;
+				continue;
+			}
+			closest_hit = hit(hits[h][w]);
+			if (closest_hit)
+				image_put_pixel(image, w, h, 0x00FFFF00);
+			w++;
 		}
-		else if (intersection->shape->type == PLANE)
-		{
-			plane = intersection->shape->attr;
-			image_put_pixel(
-			    image, intersection->x, intersection->y,
-			    create_trgb(0, plane->color.x, plane->color.y, plane->color.z));
-		}
-		else if (intersection->shape->type == CYLINDER)
-		{
-			cylinder = intersection->shape->attr;
-			image_put_pixel(
-			    image, intersection->x, intersection->y,
-			    create_trgb(0, cylinder->color.x, cylinder->color.y, cylinder->color.z));
-		}
-		intersections = intersections->next;
+		h++;
 	}
+	return (image);
+}
+
+t_image *render(t_world *world, t_vue *vue)
+{
+	t_ray    *ray;
+	int       h;
+	int       w;
+	t_list ***hits;
+
+	h = 0;
+	hits = ft_calloc(world->camera->hsize, sizeof(t_list **));
+	while (h < world->camera->hsize)
+	{
+		w = 0;
+		hits[h] = ft_calloc(world->camera->wsize, sizeof(t_list *));
+		while (w < world->camera->wsize)
+		{
+			ray = ray_at_px(world->camera, w, h);
+			hits[h][w] = get_all_hits(world->objs, ray);
+			ray_delete(ray);
+			w++;
+		}
+		h++;
+	}
+	return (__render__(vue, world, hits));
 }

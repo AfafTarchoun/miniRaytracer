@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   renderer.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: habouiba <habouiba@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/03 11:36:32 by habouiba          #+#    #+#             */
-/*   Updated: 2022/10/06 07:41:32 by habouiba         ###   ########.fr       */
+/*   Created: 2022/11/24 14:34:06 by habouiba          #+#    #+#             */
+/*   Updated: 2022/11/24 14:49:29 by habouiba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,5 @@
 
 #include "types.h"
 
-void    render(t_vue *vue, t_scene *scene);
-double  distance_between_camera_and_plane(t_camera_attr *camera);
-t_vec3 *top_left_corner(t_camera_attr *camera);
+t_image *render(t_world *w, t_vue *vue);
 #endif

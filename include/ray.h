@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ray.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/25 17:25:02 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/20 02:48:16 by atarchou         ###   ########.fr       */
+/*   Created: 2022/11/21 12:05:34 by habouiba          #+#    #+#             */
+/*   Updated: 2022/11/25 13:11:36 by habouiba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RAY_H
-# define RAY_H
-# include "types.h"
-# include "vec.h"
-# include "defs.h"
+#define RAY_H
 
-t_ray	*ray_create(t_vec3 *origin, t_vec3 *direction,
-			void (*f1)(void *), void (*f2)(void *));
-t_vec3	*ray_point_at(t_ray *ray, double t, void (*f)(void *));
-void	vec3_unit_vector(t_vec3 *vec);
-#endif
+#include "types.h"
+
+t_ray   *ray(t_point *origin, t_vector *dir);
+void     ray_delete(void *_ray);
+t_point *ray_at(t_ray *ray, float t);
+t_ray   *ray_transform(t_ray *r, float **transform, void (*f_ray)(void *), void (*f_tra)(void *));
+void     ray_print(t_ray *ray);
+t_ray   *ray_at_px(t_camera *c, int px, int py);
+#endif // !DEBUG

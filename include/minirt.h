@@ -6,13 +6,13 @@
 /*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 17:46:51 by habouiba          #+#    #+#             */
-/*   Updated: 2022/08/22 17:46:54 by habouiba         ###   ########.fr       */
+/*   Updated: 2022/11/16 17:26:48 by habouiba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 #define MINIRT_H
 
-#include <stdio.h>
-#include "mlx.h"
+#include "types.h"
+
 #endif // !MINIRT_H

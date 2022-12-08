@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 14:36:43 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/02 21:41:56 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/08 05:27:55 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,14 @@ t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s)
 	float     b;
 	float     c;
 	float     disc;
-
+	
+	// printf("%lf\n", s->transform);
+	// printf("1%lf %lf %lf\n", ray->origin->x, ray->origin->y, ray->origin->z);
 	ray = ray_transform(ray, matrix_invert_4(s->transform), NULL, matrix_free_4);
-	sphere_to_ray = tuple_sub(ray->origin, s->coord);
+	sphere_to_ray = tuple_sub(ray->origin, s->origin);
 	a = tuple_dot(ray->dir, ray->dir);
 	b = 2.0f * tuple_dot(ray->dir, sphere_to_ray);
 	c = tuple_dot(sphere_to_ray, sphere_to_ray) - 1;
-	// pow(s->raduis, 2);
 	free(sphere_to_ray);
 	ray_delete(ray);
 	disc = ((b * b) - (4 * a * c));

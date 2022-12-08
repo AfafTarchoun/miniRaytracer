@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:01:48 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/02 21:36:23 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/08 05:31:46 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ t_world *parse_cam(char *line, t_world *world)
 	matrix_free_4(world->camera->transform);
 	world->camera->origin = vector_create((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
 	world->camera->orient = vector_create((double)atof(orio[0]), (double)atof(orio[1]), (double)atof(orio[2]));
+	// printf("coord %lf %lf %lf\n",world->camera->origin->x , world->camera->origin->y, world->camera->origin->z);
 	world->camera->transform = matrix_translate_creat_4(world->camera->origin, free);
 	free_tab(orio);
 	free_tab(coord);
-	free_tab(tab);	
-	// printf("diam %lf\n", world->camera->fov);
+	free_tab(tab);
 	// printf("coord %lf %lf %lf\n",world->camera->origin->x , world->camera->origin->y, world->camera->origin->z);
 	// printf("col %lf %lf %lf\n",world->camera->orient->x , world->camera->orient->y, world->camera->orient->z);
 	return (world);

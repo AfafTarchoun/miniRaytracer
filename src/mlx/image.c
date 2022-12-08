@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   image.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:51:44 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/25 10:51:38 by habouiba         ###   ########.fr       */
+/*   Updated: 2022/12/08 01:45:37 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "image.h"
+
 #include "defs.h"
 #include "mlx.h"
+#include "../../include/parsing/parser.h" 
 
 static void *image_print_err_return_null(void)
 {
@@ -48,3 +49,4 @@ void image_put_pixel(t_image *image, int x, int y, int color)
 	dst = image->addr + (y * image->line_length + x * (image->bits_per_pixel / 8));
 	*(unsigned int *) dst = color;
 }
+  

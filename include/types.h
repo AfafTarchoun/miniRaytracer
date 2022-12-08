@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 17:46:54 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/02 19:46:11 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/08 01:28:11 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,8 @@ typedef struct s_camera
 
 typedef struct s_world
 {
-	// t_light   *light;
-	// t_a_light *alight;
+	t_light   *light;
+	t_a_light *alight;
 	t_camera *camera;
 	t_list    *objs;
 } t_world;

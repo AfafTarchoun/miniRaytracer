@@ -48,7 +48,7 @@ RAY_FILES = ray.c delete.c at.c transform.c \
 						print.c ray-for-px.c
 
 HIT_DIR = $(RENDERER_DIR)hit/
-HIT_FILES = hit.c sphere.c delete.c
+HIT_FILES = hit.c sphere.c delete.c cylinder.c
 
 ENTITY_DIR = $(RENDERER_DIR)entity/
 ENTITY_FILES = entity.c sphere.c

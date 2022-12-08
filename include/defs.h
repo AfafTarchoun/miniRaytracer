@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 17:46:40 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/02 20:44:57 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/08 01:27:49 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,5 @@
 #define VALIDATION_FUNCTIONS_COUNT 3
 #define NUMBER_OF_PARSE_FUNCTION 6
 #define EPSILON 0.00001f
+
 #endif

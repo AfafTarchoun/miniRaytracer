@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:39:17 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/02 21:40:59 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/08 04:15:01 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_world *parse_line(char *line, t_world *scene)
 
 	shape = NULL;
 	if (line[0] == 'C' && line[1] == '|')
-	{		
+	{
 		scene = parse_cam(line, scene);
 		if(!scene)
 			return (NULL);
@@ -37,7 +37,6 @@ t_world *parse_line(char *line, t_world *scene)
 	}
 	else if (line[0] == 'S' && line[1] == 'P')
 	{
-		printf("lol");
 		shape = parse_sphere(line);
 		if (!shape)
 			return NULL;
@@ -49,7 +48,7 @@ t_world *parse_line(char *line, t_world *scene)
 			return NULL;
 	}
 	else if (line[0] == 'C' && line[1] == 'Y')
-	{		
+	{
 		shape = parse_cylinder(line);
 		if (!shape)
 			return NULL;

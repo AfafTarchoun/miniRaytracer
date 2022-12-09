@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   reflection.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:14:49 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/22 16:20:33 by habouiba         ###   ########.fr       */
+/*   Updated: 2022/12/09 07:51:38 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reflection.h"
 #include "tuple.h"
-
+#include "../../../include/parsing/parser.h"
 t_vector *reflect(t_vector *in, t_vector *normal)
 {
 	t_vector *ref;

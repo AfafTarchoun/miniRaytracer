@@ -6,13 +6,13 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 17:46:54 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/08 01:28:11 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 06:55:43 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPES_H
 #define TYPES_H
-#include "libft.h"
+#include "../libs/libft/libft.h"
 
 typedef struct s_image
 {
@@ -69,10 +69,10 @@ typedef struct s_entity
 typedef struct s_material
 {
 	t_color *color;
-	float    ambient;
-	float    deffuse;
-	float    specular;
-	float    shininess;
+	double    ambient;
+	double    deffuse;
+	double    specular;
+	double    shininess;
 } t_material;
 
 typedef struct s_sphere
@@ -90,11 +90,13 @@ typedef struct s_plane
 	t_point	*origin;
 	t_point *orient;
 	t_material *material;
+	float     **transform;
 } t_plane;
 
 typedef struct s_cylinder
 {
 	t_point	*origin;
+	t_point *coord;
 	t_point *orient;
 	t_material *material;
 	float     **transform;
@@ -111,8 +113,8 @@ typedef struct s_hit
 
 typedef struct s_light
 {
-	t_point	*origin;
-	double brightness;
+	t_point	*pos;
+	double intensity;
 } t_light;
 
 typedef struct s_a_light

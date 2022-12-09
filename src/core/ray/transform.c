@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 18:01:35 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/02 21:09:14 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 07:37:30 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "point.h"
 #include "ray.h"
 #include "vector.h"
-
+#include <stdio.h>
 t_ray *ray_transform(t_ray *r, float **transform, void (*f_ray)(void *), void (*f_tra)(void *))
 {
 	t_ray *new_ray;

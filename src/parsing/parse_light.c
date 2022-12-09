@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:07:24 by atarchou          #+#    #+#             */
-/*   Updated: 2022/11/27 09:37:38 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 06:41:11 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ t_world *parse_light(char *line, t_world *world)
 	while(coord[i])
 		i++;
 	if(i != 3)
-		return NULL;
-	world->light->brightness = (double)atof(tab[2]);
-	world->light->origin = vector_create((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
+		return (NULL);
+	world->light->intensity = (double)atof(tab[2]);
+	world->light->pos = vector_create((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
 	free_tab(coord);
 	free_tab(tab);
 	return (world);

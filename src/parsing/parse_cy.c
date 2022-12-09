@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 04:16:37 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/01 21:13:36 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 06:51:04 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,14 @@ t_entity *parse_cylinder(char *line)
 		i++;
 	if(i != 3)
 		return NULL;
+	cy->origin = point_create(0, 0, 0);
 	cy->diameter = (double)atof(tab[3]);
 	cy->height = (double)atof(tab[4]);
-	cy->origin = vector_create((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
-	cy->orient = vector_create((double)atof(orio[0]), (double)atof(orio[1]), (double)atof(orio[2]));
-	cy->material->color = vector_create((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
+	cy->coord = point_create((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
+	cy->orient = point_create((double)atof(orio[0]), (double)atof(orio[1]), (double)atof(orio[2]));
+	cy->material->color = point_create((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
+	// ((t_cylinder *) shape->obj)->transform = matrix_mul_4_f(matrix_translate_creat_4(cy->coord, free),
+	// 	matrix_scale_4(vector_create(10, 10, 10), free), matrix_free_4, matrix_free_4);
 	shape->type = CYLINDER;
 	shape->obj = cy;
 	free_tab(col);

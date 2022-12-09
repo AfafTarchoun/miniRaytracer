@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 09:15:37 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/08 02:11:51 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 07:51:50 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,6 @@ t_entity *parse_plane(char *line);
 t_entity *parse_sphere(char *line);
 t_world *parse_line(char *line, t_world *scene);
 t_hit *ray_cy_hit(t_ray *ray, t_cylinder *cy);
+t_hit *ray_pl_hit(t_ray *ray,  t_plane *pl);
+t_vector *reflect(t_vector *in, t_vector *normal);
 #endif

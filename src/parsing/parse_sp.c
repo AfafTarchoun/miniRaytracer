@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:20:28 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/02 22:33:36 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 06:47:26 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ t_entity *parse_sphere(char *line)
 	sp->material->color = point_create((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
 	shape->type = SPHERE;
 	shape->obj = sp;
-	((t_sphere *) shape->obj)->transform = matrix_mul_4_f(matrix_translate_creat_4(vector_create(0, 10, -40), free),
-		matrix_scale_4(vector_create(10, 10, 10), free), matrix_free_4, matrix_free_4);
+	((t_sphere *) shape->obj)->transform = matrix_mul_4_f(matrix_translate_creat_4(sp->coord, free),
+		matrix_scale_4(vector_create(rad, rad, rad), free), matrix_free_4, matrix_free_4);
 	free_tab(coord);
 	free_tab(col);
 	free_tab(tab);

@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 14:35:56 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/08 05:19:56 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 07:48:35 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,11 @@ t_list *get_all_hits(t_list *objs, t_ray *ray)
 		entity = objs->content;
 		if (entity->type == SPHERE)
 			hit = ray_sphere_hit(ray, entity->obj);
-		else if (entity->type == CYLINDER)
-		{
-			printf("ray %lf | %lf | %lf\n", ray->origin->x, ray->origin->y, ray->origin->z);	
+		if (entity->type == CYLINDER)
 			hit = ray_cy_hit(ray, entity->obj);
-		}
-		else if (hit)
+		if (entity->type == PLANE)
+			hit = ray_pl_hit(ray, entity->obj);
+		if (hit)
 			ft_lstadd_back(&hits, ft_lstnew(hit));
 		objs = objs->next;
 	}

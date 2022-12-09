@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 14:36:43 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/08 05:27:55 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 07:29:02 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "ray.h"
 #include "tuple.h"
 #include <stdio.h>
+#include "../../../include/parsing/parser.h"
 
 t_hit *hit_sphere_create(float t1, float t2, t_sphere *s)
 {
@@ -45,8 +46,6 @@ t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s)
 	float     c;
 	float     disc;
 	
-	// printf("%lf\n", s->transform);
-	// printf("1%lf %lf %lf\n", ray->origin->x, ray->origin->y, ray->origin->z);
 	ray = ray_transform(ray, matrix_invert_4(s->transform), NULL, matrix_free_4);
 	sphere_to_ray = tuple_sub(ray->origin, s->origin);
 	a = tuple_dot(ray->dir, ray->dir);
@@ -62,4 +61,3 @@ t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s)
 	hit->t2 = (-b + sqrt(disc)) / 2 * a;
 	return (hit);
 }
- 

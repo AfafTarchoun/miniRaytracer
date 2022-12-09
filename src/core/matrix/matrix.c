@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 16:48:00 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/02 21:17:33 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/09 07:34:07 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ float **matrix_create_3()
 	i = 0;
 	while (i < 3)
 	{
+		
 		matrix[i] = ft_calloc(3, sizeof(float));
 		i++;
 	}

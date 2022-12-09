@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   matrix.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 16:48:28 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/25 11:10:44 by habouiba         ###   ########.fr       */
+/*   Updated: 2022/12/09 06:41:49 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include "libft.h"
+#include "../libs/libft/libft.h"
 #include "types.h"
 
 float **matrix_create_2();

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   add.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:07:33 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/16 12:08:19 by habouiba         ###   ########.fr       */
+/*   Updated: 2022/12/15 00:35:20 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "tuple.h"
-
+#include <stdio.h>
 t_tuple *tuple_add(t_tuple *t1, t_tuple *t2)
 {
 	t_tuple *t;

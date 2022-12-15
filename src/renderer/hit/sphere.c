@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 14:36:43 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/09 07:29:02 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 08:41:14 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,27 +37,69 @@ t_hit *hit_sphere_create(float t1, float t2, t_sphere *s)
 	return (hit);
 }
 
+void print_tuple(t_tuple *tpl)
+{
+	printf("\n--\nx = %lf\ny = %lf\nz = %lf", tpl->x, tpl->y, tpl->z);
+}
+
+t_tuple *colooor(t_tuple *v)
+{
+    t_tuple *w;
+
+    w = ft_calloc(1, sizeof(t_tuple));
+    if (!w)
+		return (w);
+    w->x = v->x * 255;
+    w->y = v->y * 255;
+    w->z = v->z * 255;
+    return (w);
+}
+
+double clamp(double d, double min, double max)
+{
+  double t = d < min ? min : d;
+  return t > max ? max : t;
+}
+
+t_tuple *clamp_color(t_tuple *v)
+{
+	t_tuple *w;
+	w = ft_calloc(1, sizeof(t_tuple));
+    if (!w)
+		return (w);
+	w->x = clamp(v->x, 0.0f, 1.0f);
+	w->y = clamp(v->y, 0.0f, 1.0f);
+	w->z = clamp(v->z, 0.0f, 1.0f);
+	return (w);
+}
+
 t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s)
 {
 	t_hit    *hit;
 	t_vector *sphere_to_ray;
+	t_vector *normal;
+	t_vector *lightdir;
 	float     a;
 	float     b;
 	float     c;
 	float     disc;
-	
+
 	ray = ray_transform(ray, matrix_invert_4(s->transform), NULL, matrix_free_4);
 	sphere_to_ray = tuple_sub(ray->origin, s->origin);
 	a = tuple_dot(ray->dir, ray->dir);
 	b = 2.0f * tuple_dot(ray->dir, sphere_to_ray);
-	c = tuple_dot(sphere_to_ray, sphere_to_ray) - 1;
-	free(sphere_to_ray);
-	ray_delete(ray);
+	c = tuple_dot(sphere_to_ray, sphere_to_ray) - pow(s->raduis/2,2);
 	disc = ((b * b) - (4 * a * c));
 	if (disc < 0)
 		return (NULL);
 	hit = hit_sphere_create(0, 0, s);
-	hit->t1 = (-b - sqrt(disc)) / 2 * a;
-	hit->t2 = (-b + sqrt(disc)) / 2 * a;
+	hit->t1 = (-b - sqrt(disc)) / 2.0f * a;
+	hit->t2 = (-b + sqrt(disc)) / 2.0f * a;
+	s->hitpoint = tuple_add(sphere_to_ray, multiplyy(ray->dir, hit->t1));
+	normal = tuple_normalize(s->hitpoint);
+	normal = clamp_color(normal);
+	normal = colooor(normal);
+	// lightdir = tuple_normalize(l->light->pos);
+	// double d = tuple_dot(normal, tuple_negate(lightdir));
 	return (hit);
 }

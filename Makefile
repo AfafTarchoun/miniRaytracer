@@ -53,6 +53,9 @@ HIT_FILES = hit.c sphere.c delete.c cylinder.c plane.c
 ENTITY_DIR = $(RENDERER_DIR)entity/
 ENTITY_FILES = entity.c sphere.c
 
+LIGHT_DIR = $(RENDERER_DIR)light/
+LIGHT_FILES = lighting.c
+
 NORMALS_DIR = $(COR_DIR)normals/
 NORMALS_FILES = sphere.c
 
@@ -80,6 +83,7 @@ CFILES += $(addprefix $(MATRIX_DIR), $(MATRIX_FILES))
 CFILES += $(addprefix $(RAY_DIR), $(RAY_FILES))
 CFILES += $(addprefix $(HIT_DIR), $(HIT_FILES))
 CFILES += $(addprefix $(ENTITY_DIR), $(ENTITY_FILES))
+CFILES += $(addprefix $(LIGHT_DIR), $(LIGHT_FILES))
 CFILES += $(addprefix $(COLOR_DIR), $(COR_FILES))
 CFILES += $(addprefix $(NORMALS_DIR), $(NORMALS_FILES))
 CFILES += $(addprefix $(REFLECTION_DIR), $(REFLECTION_FILES))

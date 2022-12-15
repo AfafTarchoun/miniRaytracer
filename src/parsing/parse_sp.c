@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:20:28 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/09 06:47:26 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/13 23:17:47 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ t_entity *parse_sphere(char *line)
 	shape = ft_calloc(1, sizeof(t_entity));
 	sp = malloc(sizeof(t_sphere));
 	sp->material = malloc(sizeof(t_material));
-	tab = ft_split(line, '|');
-	coord = ft_split(tab[1], ' ');
+	tab = ft_split(line, ' ');
+	coord = ft_split(tab[1], ',');
 	while(coord[i])
 		i++;
 	if(i != 3)
 		return NULL;
 	i = 0;
-	col = ft_split(tab[3], ' ');
+	col = ft_split(tab[3], ',');
 	while(col[i])
 		i++;
 	if(i != 3)

@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 11:35:38 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/08 02:32:30 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 06:03:18 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "point.h"
 #include "ray.h"
 #include "tuple.h"
-
+#include "../../../include/parsing/parser.h"
 t_ray *ray_at_px(t_camera *c, int px, int py)
 {
 	float    xoffsite;
@@ -32,5 +32,6 @@ t_ray *ray_at_px(t_camera *c, int px, int py)
 	ray = ft_calloc(1, sizeof(t_ray));
 	ray->origin = matrix_tuple_4(matrix_invert_4(c->transform), point_create(0, 0, 0), matrix_free_4, free);
 	ray->dir = tuple_normalize_f(tuple_sub(p_on_canvas, ray->origin), free);
+	// print_tuple(ray->dir);
 	return (ray);
 }

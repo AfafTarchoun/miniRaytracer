@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:01:48 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/08 05:31:46 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/13 23:17:37 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ t_world *parse_cam(char *line, t_world *world)
 	
 	i = 0;
 	world->camera = ft_calloc(1, sizeof(t_camera));
-	tab = ft_split(line, '|');
-	coord = ft_split(tab[1], ' ');
+	tab = ft_split(line, ' ');
+	coord = ft_split(tab[1], ',');
 	while(coord[i])
 		i++;
 	if(i != 3)
 		return NULL;
 	i = 0;
-	orio = ft_split(tab[2], ' ');
+	orio = ft_split(tab[2], ',');
 	while(orio[i])
 		i++;
 	if(i != 3)
@@ -63,7 +63,7 @@ int	handle_cam(char *file)
 			free(line);
 			return (0);
 		}
-		else if (line[0] == 'C' && !check_fields_pipe(line, 3))
+		else if (line[0] == 'C' && !check_fields_comma(line, 3))
 		{
 			free(line);
 			return (0);

@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 18:31:34 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/08 04:14:01 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/13 23:15:48 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_world *parse_file(char *file, t_world *scene)
     while((line = get_next_line(fd)) > 0)
     {
         if ((line[0] != '\0'))
-		{	
+		{
 			scene = parse_line(line, scene);
 			if(!scene)
 				return NULL;
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 	image = render(world, vue);
 	mlx_put_image_to_window(vue->mlx, vue->window, image->img, 0, 0);
 	mlx_loop(vue->mlx);
-	// free(world);
-	// system("leaks minirt");
+	free(world);
+	system("leaks minirt");
 	return (0);
 }

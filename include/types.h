@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 17:46:54 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/09 06:55:43 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 08:36:09 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ typedef struct s_sphere
 	t_point		*coord;
 	float       raduis;
 	int         id;
+	t_vector   *normal;
+	t_vector *hitpoint;
 	float     **transform;
 	t_material *material;
 } t_sphere;

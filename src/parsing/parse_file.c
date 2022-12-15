@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:39:17 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/08 04:15:01 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/13 23:55:52 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_world *parse_line(char *line, t_world *scene)
 	t_entity *shape;
 
 	shape = NULL;
-	if (line[0] == 'C' && line[1] == '|')
+	if (line[0] == 'C')
 	{
 		scene = parse_cam(line, scene);
 		if(!scene)
@@ -35,19 +35,19 @@ t_world *parse_line(char *line, t_world *scene)
 		if(!scene)
 			return (NULL);
 	}
-	else if (line[0] == 'S' && line[1] == 'P')
+	else if (line[0] == 's' && line[1] == 'p')
 	{
 		shape = parse_sphere(line);
 		if (!shape)
 			return NULL;
 	}
-	else if (line[0] == 'P' && line[1] == 'L')
+	else if (line[0] == 'p' && line[1] == 'l')
 	{
 		shape = parse_plane(line);
 		if (!shape)
 			return NULL;
 	}
-	else if (line[0] == 'C' && line[1] == 'Y')
+	else if (line[0] == 'c' && line[1] == 'y')
 	{
 		shape = parse_cylinder(line);
 		if (!shape)
@@ -98,7 +98,7 @@ char *no_newline(char *line)
 	return new;
 }
 
-int check_fields_pipe(char *line, int nb)
+int check_fields_comma(char *line, int nb)
 {
 	char **fields;
 	char **info;
@@ -108,7 +108,7 @@ int check_fields_pipe(char *line, int nb)
 	
 	i = 0;
 	new = no_newline(line);
-	fields = ft_split(new, '|');
+	fields = ft_split(new, ' ');
 	while(fields[i])
 		i++;
 	if (i != nb + 1)
@@ -116,15 +116,14 @@ int check_fields_pipe(char *line, int nb)
 	i = 1;
 	while(i <= nb)
 	{
-		info = ft_split(fields[i], ' ');
+		info = ft_split(fields[i], ',');
 		j = 0;
-		while(info[j])
+		while (info[j])
 		{
-			if(!ft_isdouble(info[j]))
-				return(0);
+			if (!ft_isdouble(info[j]))
+				return (0);
 			j++;
 		}
-		j = 0;
 		i++;
 	}
 	free_tab(fields);
@@ -146,27 +145,27 @@ int error_management(char *file)
     }
     while((line = get_next_line(fd)) > 0)
     {
-		if (line[0] == 'L' && !check_fields_pipe(line, 2))
+		if (line[0] == 'L' && !check_fields_comma(line, 3))
 		{
 			free(line);
 			return (0);
 		}
-		else if (line[0] == 'A' && !check_fields_pipe(line, 2))
+		else if (line[0] == 'A' && !check_fields_comma(line, 2))
 		{
 			free(line);
 			return (0);
 		}
-		if (line[0] == 'S' && line[1] == 'P' && !check_fields_pipe(line, 3))
+		if (line[0] == 's' && line[1] == 'p' && !check_fields_comma(line, 3))
 		{
 			free(line);
 			return (0);
 		}
-		else if (line[0] == 'P' && line[1] == 'L' && !check_fields_pipe(line, 3))
+		else if (line[0] == 'p' && line[1] == 'l' && !check_fields_comma(line, 3))
 		{
 			free(line);
 			return (0);
 		}
-		else if (line[0] == 'C' && line[1] == 'Y' && !check_fields_pipe(line, 5))
+		else if (line[0] == 'c' && line[1] == 'y' && !check_fields_comma(line, 5))
 		{
 			free(line);
 			return (0);

@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 04:16:37 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/09 06:51:04 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/13 23:18:53 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,20 @@ t_entity *parse_cylinder(char *line)
 	shape = ft_calloc(1, sizeof(t_entity));
 	cy = malloc(sizeof(t_cylinder));
 	cy->material = malloc(sizeof(t_material));
-	tab = ft_split(line, '|');
-	coord = ft_split(tab[1], ' ');
+	tab = ft_split(line, ' ');
+	coord = ft_split(tab[1], ',');
 	while(coord[i])
 		i++;
 	if(i != 3)
 		return NULL;
 	i = 0;
-	orio = ft_split(tab[2], ' ');
+	orio = ft_split(tab[2], ',');
 	while(orio[i])
 		i++;
 	if(i != 3)
 		return NULL;
 	i = 0;
-	col = ft_split(tab[5], ' ');
+	col = ft_split(tab[5], ',');
 	while(col[i])
 		i++;
 	if(i != 3)

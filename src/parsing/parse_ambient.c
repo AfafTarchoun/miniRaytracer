@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:17:44 by atarchou          #+#    #+#             */
-/*   Updated: 2022/11/27 09:37:39 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 00:46:26 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ t_world *parse_ambient(char *line, t_world *world)
 	
 	i = 0;
 	world->alight = ft_calloc(1, sizeof(t_a_light));
-	tab = ft_split(line, '|');
-	col = ft_split(tab[2], ' ');
+	tab = ft_split(line, ' ');
+	col = ft_split(tab[2], ',');
 	while(col[i])
 		i++;
 	if(i != 3)

@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 09:15:37 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/09 07:51:50 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 05:35:14 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 
 void free_tab(char **tab);
 int	handle_cam(char *file);
-int check_fields_pipe(char *line, int nb);
+int check_fields_comma(char *line, int nb);
 int error_management(char *file);
 t_world *parse_ambient(char *line, t_world *world);
 t_world *parse_cam(char *line, t_world *world);
@@ -46,4 +46,7 @@ t_world *parse_line(char *line, t_world *scene);
 t_hit *ray_cy_hit(t_ray *ray, t_cylinder *cy);
 t_hit *ray_pl_hit(t_ray *ray,  t_plane *pl);
 t_vector *reflect(t_vector *in, t_vector *normal);
+t_color *lighting(t_sphere *sp, t_world *world, t_point *point);
+t_tuple *multiplyy(t_tuple *v, float m);
+void print_tuple(t_tuple *tpl);
 #endif

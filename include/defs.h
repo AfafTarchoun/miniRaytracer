@@ -6,13 +6,13 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 17:46:40 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/09 07:03:37 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 01:39:20 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEFS_H
 #define DEFS_H
-#define VUE_WIDTH 400
+#define VUE_WIDTH 600
 #define VUE_HEIGHT 400
 // #define VUE_WIDTH 640
 // #define VUE_HEIGHT 360

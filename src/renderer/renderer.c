@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 14:35:56 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/15 07:46:12 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 12:16:56 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include "mlx.h"
 #include "../../include/parsing/parser.h"
 
-t_list *get_all_hits(t_list *objs, t_ray *ray)
+t_list *get_all_hits(t_list *objs, t_ray *ray, t_world *world)
 {
 	t_list   *hits;
 	t_hit    *hit;
@@ -33,7 +33,7 @@ t_list *get_all_hits(t_list *objs, t_ray *ray)
 		hit = 0;
 		entity = objs->content;
 		if (entity->type == SPHERE)
-			hit = ray_sphere_hit(ray, entity->obj);
+			hit = ray_sphere_hit(ray, entity->obj, world);
 		if (entity->type == CYLINDER)
 			hit = ray_cy_hit(ray, entity->obj);
 		if (entity->type == PLANE)
@@ -70,7 +70,9 @@ void put_intersections(t_hit *hit, t_image *image, int h, int w, t_world *world)
 			// test = lighting(sphere, world, sphere->sphere_to_ray);
 			// printf("%lf %lf %lf\n", test->x, test->y, test->z);
 			// try = RGBtoInt(test->x, test->y, test->z);
-	printf("%lf %lf %lf\n",sphere->material->color->x, sphere->material->color->y, sphere->material->color->z);
+	// printf("%lf %lf %lf\n",sphere->material->color->x, sphere->material->color->y, sphere->material->color->z);
+			sphere->material->color = clamp_color(sphere->material->color);
+			sphere->material->color = colooor(sphere->material->color);
 			image_put_pixel(
 				image, w, h, create_trgb(0, sphere->material->color->x, sphere->material->color->y, sphere->material->color->z));
 		}
@@ -142,7 +144,7 @@ t_image *render(t_world *world, t_vue *vue)
 		while (w < world->camera->wsize)
 		{
 			ray = ray_at_px(world->camera, w, h);
-			hits[h][w] = get_all_hits(world->objs, ray);
+			hits[h][w] = get_all_hits(world->objs, ray, world);
 			ray_delete(ray);
 			w++;
 		}

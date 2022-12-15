@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:07:24 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/13 23:55:19 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 12:40:56 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,29 @@ t_world *parse_light(char *line, t_world *world)
 {
 	char **tab;
 	char **coord;
+	char **col;
 	int i;
 	
 	i = 0;
 	world->light = ft_calloc(1, sizeof(t_light));
+	world->light->material = ft_calloc(1, sizeof(t_material));
 	tab = ft_split(line, ' ');
 	coord = ft_split(tab[1], ',');
 	while(coord[i])
 		i++;
 	if(i != 3)
 		return (NULL);
+	i = 0;
+	col = ft_split(tab[3], ',');
+	while(col[i])
+		i++;
+	if(i != 3)
+		return 0;
 	world->light->intensity = (double)atof(tab[2]);
 	world->light->pos = vector_create((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
+	world->light->material->color = point_create((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
 	free_tab(coord);
 	free_tab(tab);
+	free_tab(col);
 	return (world);
 }

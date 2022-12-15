@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 09:15:37 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/15 05:35:14 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 10:43:20 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ t_world *parse_line(char *line, t_world *scene);
 t_hit *ray_cy_hit(t_ray *ray, t_cylinder *cy);
 t_hit *ray_pl_hit(t_ray *ray,  t_plane *pl);
 t_vector *reflect(t_vector *in, t_vector *normal);
-t_color *lighting(t_sphere *sp, t_world *world, t_point *point);
+t_color *lighting(t_sphere *sp, t_world *world);
 t_tuple *multiplyy(t_tuple *v, float m);
 void print_tuple(t_tuple *tpl);
+t_tuple *colooor(t_tuple *v);
+t_tuple *clamp_color(t_tuple *v);
 #endif

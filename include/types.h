@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 17:46:54 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/15 08:36:09 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 12:29:25 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ typedef struct s_hit
 typedef struct s_light
 {
 	t_point	*pos;
+	t_material *material;
 	double intensity;
 } t_light;
 

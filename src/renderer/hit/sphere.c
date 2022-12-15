@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 14:36:43 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/15 08:41:14 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 12:23:53 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,12 @@ t_tuple *clamp_color(t_tuple *v)
 	return (w);
 }
 
-t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s)
+double max(double num1, double num2)
+{
+    return (num1 > num2 ) ? num1 : num2;
+}
+
+t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s, t_world *world)
 {
 	t_hit    *hit;
 	t_vector *sphere_to_ray;
@@ -97,9 +102,8 @@ t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s)
 	hit->t2 = (-b + sqrt(disc)) / 2.0f * a;
 	s->hitpoint = tuple_add(sphere_to_ray, multiplyy(ray->dir, hit->t1));
 	normal = tuple_normalize(s->hitpoint);
-	normal = clamp_color(normal);
-	normal = colooor(normal);
-	// lightdir = tuple_normalize(l->light->pos);
-	// double d = tuple_dot(normal, tuple_negate(lightdir));
+	lightdir = tuple_normalize(world->light->pos);
+	double d = max(tuple_dot(normal, tuple_negate(lightdir)), 0.0f);
+	s->material->color = multiplyy(s->material->color, d);
 	return (hit);
 }

@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 14:36:43 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/15 12:23:53 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 12:51:43 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s, t_world *world)
 	float     b;
 	float     c;
 	float     disc;
-
+	
 	ray = ray_transform(ray, matrix_invert_4(s->transform), NULL, matrix_free_4);
 	sphere_to_ray = tuple_sub(ray->origin, s->origin);
 	a = tuple_dot(ray->dir, ray->dir);

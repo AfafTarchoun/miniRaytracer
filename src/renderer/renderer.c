@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 14:35:56 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/15 12:16:56 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/15 12:52:48 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,12 @@ t_list *get_all_hits(t_list *objs, t_ray *ray, t_world *world)
 	return (hits);
 }
 
-int RGBtoInt(int r, int g, int b)
-{
-    return ( r << 0 ) | ( g << 8 ) | ( b << 16 );
-}
-
 void put_intersections(t_hit *hit, t_image *image, int h, int w, t_world *world)
 {
 	t_sphere *sphere;
 	t_entity *shape;
 	t_plane   *plane;
 	t_cylinder *cylinder;
-	t_color		*test;
-	int try;
 	t_list *objs;
 
 	objs = world->objs;
@@ -67,10 +60,6 @@ void put_intersections(t_hit *hit, t_image *image, int h, int w, t_world *world)
 		if (shape->type == SPHERE)
 		{
 			sphere = shape->obj;
-			// test = lighting(sphere, world, sphere->sphere_to_ray);
-			// printf("%lf %lf %lf\n", test->x, test->y, test->z);
-			// try = RGBtoInt(test->x, test->y, test->z);
-	// printf("%lf %lf %lf\n",sphere->material->color->x, sphere->material->color->y, sphere->material->color->z);
 			sphere->material->color = clamp_color(sphere->material->color);
 			sphere->material->color = colooor(sphere->material->color);
 			image_put_pixel(
@@ -83,15 +72,13 @@ void put_intersections(t_hit *hit, t_image *image, int h, int w, t_world *world)
 				image, w, h,
 				create_trgb(0, plane->material->color->x, plane->material->color->y, plane->material->color->z));
 		}
-		// lighting(sphere, world, sphere->sphere_to_ray)
-		// create_trgb(0, sphere->material->color->x, sphere->material->color->y, sphere->material->color->z)
-		// else if (hit->entity->type == CYLINDER)
-		// {
-		// 	cylinder = hit->entity->obj;
-		// 	image_put_pixel(
-		// 		image, w, h,
-		// 		create_trgb(0, cylinder->material->color->x, cylinder->material->color->y, cylinder->material->color->z));
-		// }
+		else if (hit->entity->type == CYLINDER)
+		{
+			cylinder = hit->entity->obj;
+			image_put_pixel(
+				image, w, h,
+				create_trgb(0, cylinder->material->color->x, cylinder->material->color->y, cylinder->material->color->z));
+		}
 		objs = objs->next;
 	}
 }
@@ -118,7 +105,6 @@ t_image	*__render__(t_vue *vue, t_world *world, t_list ***hits)
 			closest_hit = hit(hits[h][w]);
 			if (closest_hit)
 				put_intersections(closest_hit, image, h, w, world);
-				// image_put_pixel(image, w, h, 0x00CC3300);
 			w++;
 		}
 		h++;

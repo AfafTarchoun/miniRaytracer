@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 05:52:15 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/15 08:40:21 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/18 08:25:15 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,47 +34,47 @@ t_tuple *multiplyy(t_tuple *v, float m)
     return (w);
 }
 
-t_color *lighting(t_sphere *sp, t_world *world)
+void material(t_material *m)
 {
-    // t_color *eff_color;
-    // t_color *ambient;
-    // t_color *diffuse;
-    // t_color *specular;
+  m->ambient = 0.1;
+  m->deffuse = 0.9;
+  m->specular = 0.9;
+  m->shininess = 200.0;
+}
+// t_color *lighting(t_material *m,t_world *world, t_vector *point, t_vector *eye, t_vector *n)
+t_color *lighting(t_material *m, t_world *world, t_point *point, t_vector *N)
+{
+    t_color *eff_color;
+    t_color *ambient;
+    t_color *diffuse;
+    t_color *specular;
     t_vector *lightv;
-	t_vector *normal;
-    // t_vector *reflectv;
-    // double light_dot_normal;
-    // double reflect_dot_normal;
-    // double factor;
-    normal = tuple_normalize(sp->hitpoint);
-	normal = clamp_color(normal);
-	normal = colooor(normal);
-	lightv = tuple_normalize(world->light->pos);
-	double d = tuple_dot(normal, tuple_negate(lightv));
-    // printf("ehu\n");
-    // eff_color = multiplyy(sp->material->color, world->light->intensity);
-    // lightv = tuple_normalize(tuple_sub(world->light->pos, point));
-    // ambient = multiplyy(eff_color, sp->material->ambient);
-    // light_dot_normal = tuple_dot(lightv, sp->normal);
-    // if (light_dot_normal < 0)
-    // {
-    //     diffuse = 0;
-    //     specular = 0;
-    // }
-    // else
-    // {        
-    //     diffuse = multiplyy(multiplyy(eff_color, sp->material->deffuse), light_dot_normal);
-    //     reflectv = reflect(tuple_negate(lightv), sp->normal);
-    //     reflect_dot_normal = tuple_dot(reflectv, world->camera->origin);
-    //     if (reflect_dot_normal <= 0)
-    //         specular = 0;
-    //     else
-    //     {
-    //         factor = pow(reflect_dot_normal, sp->material->shininess);
-    //         // specular = factor * m->specular * world->light->intensity;
-    //     }
-    // }
-    // return (tuple_add(diffuse, ambient));
-    sp->material->color = multiplyy(sp->material->color, d);
-    return(sp->material->color);
+    t_vector *reflectv;
+    double light_dot_normal;
+    double reflect_dot_normal;
+    double factor;
+    
+    eff_color = multiply(m->color,world->light->intensity);
+    lightv = tuple_normalize(tuple_sub(world->light->pos, point));
+    ambient = multiply(eff_color, m->ambient);
+    light_dot_normal = tuple_dot(lightv, N);
+    if (light_dot_normal < 0)
+    {
+        diffuse = 0;
+        specular = 0;
+    }
+    else
+    {        
+        diffuse = multiply(multiply(eff_color, m->deffuse), light_dot_normal);
+        // reflectv = reflect(tuple_negate(lightv), N);
+        // reflect_dot_normal = tuple_dot(reflectv, world->camera->origin);
+        // if (reflect_dot_normal <= 0)
+        //     specular = 0;
+        // else
+        // {
+        //   factor = pow(reflect_dot_normal, m->shininess);
+        //   // specular = factor * m->specular * world->light->intensity;
+        // }
+    }
+    return (tuple_add(diffuse, ambient));
 }

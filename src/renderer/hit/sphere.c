@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 14:36:43 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/15 12:51:43 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/18 07:53:07 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s, t_world *world)
 	a = tuple_dot(ray->dir, ray->dir);
 	b = 2.0f * tuple_dot(ray->dir, sphere_to_ray);
 	c = tuple_dot(sphere_to_ray, sphere_to_ray) - pow(s->raduis/2,2);
+	// free(cy_to_ray);
+	// ray_delete(ray);
 	disc = ((b * b) - (4 * a * c));
 	if (disc < 0)
 		return (NULL);
@@ -101,9 +103,9 @@ t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s, t_world *world)
 	hit->t1 = (-b - sqrt(disc)) / 2.0f * a;
 	hit->t2 = (-b + sqrt(disc)) / 2.0f * a;
 	s->hitpoint = tuple_add(sphere_to_ray, multiplyy(ray->dir, hit->t1));
-	normal = tuple_normalize(s->hitpoint);
-	lightdir = tuple_normalize(world->light->pos);
-	double d = max(tuple_dot(normal, tuple_negate(lightdir)), 0.0f);
-	s->material->color = multiplyy(s->material->color, d);
+	// normal = tuple_normalize(s->hitpoint);
+	// lightdir = tuple_normalize(world->light->pos);
+	// double d = max(tuple_dot(normal, tuple_negate(lightdir)), 0.0f);
+	// s->material->color = multiplyy(s->material->color, d);
 	return (hit);
 }

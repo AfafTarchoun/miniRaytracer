@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:44:00 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/15 12:50:51 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/17 18:22:34 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ t_hit *ray_cy_hit(t_ray *ray, t_cylinder *cy)
 	double c;
 	double z;
 	double t;
-	
+
+	print_tuple(ray->dir);
 	ray = ray_transform(ray, matrix_invert_4(cy->transform), NULL, matrix_free_4);
 	cy_to_ray = tuple_sub(ray->origin, cy->origin);
 	a = tuple_dot(ray->dir, ray->dir)
@@ -61,8 +62,8 @@ t_hit *ray_cy_hit(t_ray *ray, t_cylinder *cy)
 					cy->orient) * tuple_dot(cy_to_ray, cy->orient));
 	c = tuple_dot(cy_to_ray, cy_to_ray) - pow(tuple_dot(cy_to_ray ,cy->orient), 2)
 			- pow((cy->diameter / 2), 2);
-	free(cy_to_ray);
-	ray_delete(ray);
+	// free(cy_to_ray);
+	// ray_delete(ray);
 	if ((b * b - 4 * a * c) < 0)
 		return (NULL);
 	hit = hit_cy_create(0, 0, cy);

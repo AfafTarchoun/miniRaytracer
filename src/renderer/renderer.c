@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 14:35:56 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/15 12:52:48 by atarchou         ###   ########.fr       */
+/*   Updated: 2022/12/17 18:02:41 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ t_list *get_all_hits(t_list *objs, t_ray *ray, t_world *world)
 		entity = objs->content;
 		if (entity->type == SPHERE)
 			hit = ray_sphere_hit(ray, entity->obj, world);
-		if (entity->type == CYLINDER)
+		else if (entity->type == CYLINDER)
 			hit = ray_cy_hit(ray, entity->obj);
-		if (entity->type == PLANE)
+		else if (entity->type == PLANE)
 			hit = ray_pl_hit(ray, entity->obj);
 		if (hit)
 			ft_lstadd_back(&hits, ft_lstnew(hit));
@@ -60,21 +60,24 @@ void put_intersections(t_hit *hit, t_image *image, int h, int w, t_world *world)
 		if (shape->type == SPHERE)
 		{
 			sphere = shape->obj;
-			sphere->material->color = clamp_color(sphere->material->color);
-			sphere->material->color = colooor(sphere->material->color);
+			// sphere->material->color = clamp_color(sphere->material->color);
+			// sphere->material->color = colooor(sphere->material->color);
+			// double dist = tuple_dot(tuple_sub(sphere->hitpoint, world->camera->origin), sphere->normal);
 			image_put_pixel(
-				image, w, h, create_trgb(0, sphere->material->color->x, sphere->material->color->y, sphere->material->color->z));
+				image, w, h,
+				create_trgb(0, sphere->material->color->x, sphere->material->color->y, sphere->material->color->z));
 		}
 		else if (shape->type == PLANE)
 		{
 			plane = shape->obj;
+			// print_tuple(plane->material->color);
 			image_put_pixel(
 				image, w, h,
 				create_trgb(0, plane->material->color->x, plane->material->color->y, plane->material->color->z));
 		}
-		else if (hit->entity->type == CYLINDER)
+		else if (shape->type == CYLINDER)
 		{
-			cylinder = hit->entity->obj;
+			cylinder = shape->obj;
 			image_put_pixel(
 				image, w, h,
 				create_trgb(0, cylinder->material->color->x, cylinder->material->color->y, cylinder->material->color->z));

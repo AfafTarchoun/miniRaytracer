@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   world.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 08:56:05 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/24 10:45:14 by habouiba         ###   ########.fr       */
+/*   Updated: 2023/01/04 05:50:57 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WORLD_H
-#define WORLD_H
+# define    WORLD_H
+# include "types.h"
 
+void	world_delete(t_world *world);
 #endif

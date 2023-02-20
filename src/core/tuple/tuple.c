@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   tuple.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:24:51 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/15 17:41:38 by habouiba         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tuple.h"
 
-t_tuple *tuple_create(float x, float y, float z, float w)
+t_tuple	*tuple_create(double x, double y, double z, double w)
 {
-	t_tuple *tuple;
+	t_tuple	*tuple;
 
 	tuple = ft_calloc(1, sizeof(t_tuple));
 	if (!tuple)

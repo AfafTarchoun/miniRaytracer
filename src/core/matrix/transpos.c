@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   transpos.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 15:33:09 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/18 15:46:18 by habouiba         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "matrix.h"
 
-float **matrix_transpos_n(float **_m, int n, void (*f)(void *))
+double	**matrix_transpos_n(double **_m, int n, void (*f)(void *))
 {
-	float **m;
-	int     i;
-	int     j;
+	double	**m;
+	int		i;
+	int		j;
 
 	m = matrix_create_4();
 	i = 0;
@@ -35,17 +35,17 @@ float **matrix_transpos_n(float **_m, int n, void (*f)(void *))
 	return (m);
 }
 
-float **matrix_transpos_4(float **_m, void (*f)(void *))
+double	**matrix_transpos_4(double **_m, void (*f)(void *))
 {
 	return (matrix_transpos_n(_m, 4, f));
 }
 
-float **matrix_transpos_3(float **_m, void (*f)(void *))
+double	**matrix_transpos_3(double **_m, void (*f)(void *))
 {
 	return (matrix_transpos_n(_m, 3, f));
 }
 
-float **matrix_transpos_2(float **_m, void (*f)(void *))
+double	**matrix_transpos_2(double **_m, void (*f)(void *))
 {
 	return (matrix_transpos_n(_m, 2, f));
 }

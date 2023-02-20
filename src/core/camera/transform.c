@@ -6,7 +6,7 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 13:49:02 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/02 21:06:59 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,45 @@
 #include "point.h"
 #include "tuple.h"
 
-float **camera_transform(t_point *from, t_vector *to, t_vector *up)
+typedef struct s_camera_vars
 {
-	t_vector *forward;
-	t_vector *left;
-	t_vector *true_up;
-	float   **orientation;
-	float   **tmp;
-	float   **tmp2;
+	t_vector	*forward;
+	t_vector	*left;
+	t_vector	*true_up;
+	double		**orientation;
+	double		**tmp;
+	double		**tmp2;
+}	t_camera_vars;
 
-	forward = tuple_normalize_f(tuple_sub(to, from), free);
-	left = tuple_cross_f(forward, tuple_normalize(up), NULL, free);
-	true_up = tuple_cross(left, forward);
-	orientation = matrix_identity_4();
-	orientation[0][0] = left->x;
-	orientation[0][1] = left->y;
-	orientation[0][2] = left->z;
-	orientation[1][0] = true_up->x;
-	orientation[1][1] = true_up->y;
-	orientation[1][2] = true_up->z;
-	orientation[2][0] = -forward->x;
-	orientation[2][1] = -forward->y;
-	orientation[2][2] = -forward->z;
-	free(forward);
-	free(left);
-	free(true_up);
-	tmp = matrix_translate_creat_4(point_create(-from->x, -from->y, -from->z), free);
-	tmp2 = matrix_mul_4(orientation, tmp);
-	matrix_free_4(orientation);
-	matrix_free_4(tmp);
-	return (tmp2);
+double	**__camera_transform__(t_camera_vars *vars, t_point *from)
+{
+	free(vars->forward);
+	free(vars->left);
+	free(vars->true_up);
+	vars->tmp = matrix_translate_creat_4(point_create
+			(-from->x, -from->y, -from->z), free);
+	vars->tmp2 = matrix_mul_4(vars->orientation, vars->tmp);
+	matrix_free_4(vars->orientation);
+	matrix_free_4(vars->tmp);
+	return (vars->tmp2);
+}
+
+double	**camera_transform(t_point *from, t_vector *to, t_vector *up)
+{
+	t_camera_vars	vars;
+
+	vars.forward = tuple_normalize_f(tuple_sub(to, from), free);
+	vars.left = tuple_cross_f(vars.forward, tuple_normalize(up), NULL, free);
+	vars.true_up = tuple_cross(vars.left, vars.forward);
+	vars.orientation = matrix_identity_4();
+	vars.orientation[0][0] = vars.left->x;
+	vars.orientation[0][1] = vars.left->y;
+	vars.orientation[0][2] = vars.left->z;
+	vars.orientation[1][0] = vars.true_up->x;
+	vars.orientation[1][1] = vars.true_up->y;
+	vars.orientation[1][2] = vars.true_up->z;
+	vars.orientation[2][0] = -vars.forward->x;
+	vars.orientation[2][1] = -vars.forward->y;
+	vars.orientation[2][2] = -vars.forward->z;
+	return (__camera_transform__(&vars, from));
 }

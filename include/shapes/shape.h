@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   shape.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 08:06:19 by habouiba          #+#    #+#             */
-/*   Updated: 2022/09/28 08:10:27 by habouiba         ###   ########.fr       */
+/*   Updated: 2022/12/26 01:15:08 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SHAPE_TYPE_H
-#define SHAPE_TYPE_H
-#include "types.h"
-void shape_delete(void *shape);
+#ifndef SHAPE_H
+# define SHAPE_H
+# include "types.h"
+
+void	shape_delete(void *shape);
 #endif

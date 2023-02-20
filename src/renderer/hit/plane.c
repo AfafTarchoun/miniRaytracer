@@ -6,61 +6,61 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 06:52:51 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/09 07:12:04 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/parsing/parser.h"
+#include "parsing/parser.h"
+#include "defs.h"
 
-t_plane *plane(t_point *origin, t_material *m, t_point *orient)
+void	plane_delete(void *_p)
 {
-	t_plane *pl;
+	t_plane	*p;
 
-	pl = ft_calloc(1, sizeof(t_plane));
-	pl->origin = origin;
-	pl->orient = orient;
-	pl->transform = matrix_identity_4();
-	pl->material = m;
-	return (pl);
+	p = _p;
+	free(p->origin);
+	free(p->material->color);
+	free(p->material);
+	free(p->orient);
+	matrix_free_4(p->transform);
+	matrix_free_4(p->inv_transform);
+	free(p);
 }
 
-t_hit *hit_plane_create(float t1, float t2, t_plane *pl)
+t_hit	*hit_plane_create(double t1, double t2, t_plane *pl)
 {
-	t_hit *hit;
+	t_hit	*hit;
 
 	hit = ft_calloc(1, sizeof(t_hit));
 	hit->entity = ft_calloc(1, sizeof(t_entity));
 	hit->entity->type = PLANE;
 	hit->t1 = t1;
 	hit->t2 = t2;
-	if (pl)
-		hit->entity->obj =
-		    plane(point_create(pl->origin->x, pl->origin->y, pl->origin->z), material(),
-                point_create(pl->orient->x, pl->orient->y, pl->orient->z));
+	hit->entity->obj = pl;
 	return (hit);
 }
 
-t_hit *ray_pl_hit(t_ray *ray,  t_plane *pl)
+t_hit	*ray_pl_hit(t_ray *ray, t_plane *pl)
 {
-	double          denom;
-	t_vector       *sub;
-	double          t;
-	t_hit           *hit;
+	double	t;
+	t_hit	*hit;
 
-	denom = tuple_dot(ray->dir, pl->orient);
-	if (denom > 1e-6)
+	ray = ray_transform(ray, pl->inv_transform, NULL, NULL);
+	if (fabs(ray->dir->y) < EPSILON)
 	{
-		sub = tuple_sub(pl->origin, ray->origin);
-		t = tuple_dot(sub, pl->orient) / denom;
-		if (t < 0)
-			return (NULL);
-		hit = ft_calloc(1, sizeof(t_hit));
-		hit->entity = ft_calloc(1, sizeof(t_entity));
-		hit->entity->type = PLANE;
-		hit->entity->obj = pl;
-		hit->t1 = t;
-		hit->t2 = t;
-		return (hit);
+		ray_delete(ray);
+		return (NULL);
 	}
-	return (NULL);
+	t = -ray->origin->y / ray->dir->y;
+	if (t < 0.00f)
+	{
+		ray_delete(ray);
+		return (NULL);
+	}
+	hit = hit_plane_create(t, t, pl);
+	hit->hitpoint = ray_at(ray, t);
+	hit->eyev = tuple_negate(ray->dir);
+	hit->norm = normal_at_plane(pl, hit->hitpoint, NULL);
+	ray_delete(ray);
+	return (hit);
 }

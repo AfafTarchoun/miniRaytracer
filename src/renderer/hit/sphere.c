@@ -6,10 +6,11 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 14:36:43 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/18 07:53:07 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "parsing/parser.h"
 #include "color.h"
 #include "entity.h"
 #include "hit.h"
@@ -20,92 +21,64 @@
 #include "ray.h"
 #include "tuple.h"
 #include <stdio.h>
-#include "../../../include/parsing/parser.h"
 
-t_hit *hit_sphere_create(float t1, float t2, t_sphere *s)
+t_hit	*hit_sphere_create(double t1, double t2, t_sphere *s)
 {
-	t_hit *hit;
+	t_hit		*hit;
 
 	hit = ft_calloc(1, sizeof(t_hit));
 	hit->entity = ft_calloc(1, sizeof(t_entity));
 	hit->entity->type = SPHERE;
+	hit->entity->obj = s;
 	hit->t1 = t1;
 	hit->t2 = t2;
-	if (s)
-		hit->entity->obj =
-		    sphere(point_create(s->origin->x, s->origin->y, s->origin->z), material(), s->raduis);
 	return (hit);
 }
 
-void print_tuple(t_tuple *tpl)
+void	print_tuple(t_tuple *tpl)
 {
 	printf("\n--\nx = %lf\ny = %lf\nz = %lf", tpl->x, tpl->y, tpl->z);
 }
 
-t_tuple *colooor(t_tuple *v)
+t_hit	*fill_hit(t_ray *ray, t_sphere *s, t_vector *s_r, t_hit *hit)
 {
-    t_tuple *w;
-
-    w = ft_calloc(1, sizeof(t_tuple));
-    if (!w)
-		return (w);
-    w->x = v->x * 255;
-    w->y = v->y * 255;
-    w->z = v->z * 255;
-    return (w);
+	hit->eyev = tuple_negate(ray->dir);
+	if (which_positive_and_low(hit->t1, hit->t2) > 0)
+	{
+		hit->hitpoint = tuple_add_f(s_r, tuple_scale(ray->dir,
+					which_positive_and_low(hit->t1, hit->t2)), 0, free);
+		hit->norm = normal_at_sphere(s, hit->hitpoint, 0);
+	}
+	else
+		hit->hitpoint = NULL;
+	return (hit);
 }
 
-double clamp(double d, double min, double max)
+t_hit	*ray_sphere_hit(t_ray *ray, t_sphere *s)
 {
-  double t = d < min ? min : d;
-  return t > max ? max : t;
-}
+	t_hit		*hit;
+	t_vector	*sphere_to_ray;
+	t_solution	*res;
+	double		disc;
 
-t_tuple *clamp_color(t_tuple *v)
-{
-	t_tuple *w;
-	w = ft_calloc(1, sizeof(t_tuple));
-    if (!w)
-		return (w);
-	w->x = clamp(v->x, 0.0f, 1.0f);
-	w->y = clamp(v->y, 0.0f, 1.0f);
-	w->z = clamp(v->z, 0.0f, 1.0f);
-	return (w);
-}
-
-double max(double num1, double num2)
-{
-    return (num1 > num2 ) ? num1 : num2;
-}
-
-t_hit *ray_sphere_hit(t_ray *ray, t_sphere *s, t_world *world)
-{
-	t_hit    *hit;
-	t_vector *sphere_to_ray;
-	t_vector *normal;
-	t_vector *lightdir;
-	float     a;
-	float     b;
-	float     c;
-	float     disc;
-	
-	ray = ray_transform(ray, matrix_invert_4(s->transform), NULL, matrix_free_4);
+	res = ft_calloc(1, sizeof(t_solution));
+	ray = ray_transform(ray, s->inv_transform, NULL, NULL);
 	sphere_to_ray = tuple_sub(ray->origin, s->origin);
-	a = tuple_dot(ray->dir, ray->dir);
-	b = 2.0f * tuple_dot(ray->dir, sphere_to_ray);
-	c = tuple_dot(sphere_to_ray, sphere_to_ray) - pow(s->raduis/2,2);
-	// free(cy_to_ray);
-	// ray_delete(ray);
-	disc = ((b * b) - (4 * a * c));
+	res->a = tuple_dot(ray->dir, ray->dir);
+	res->b = 2.0f * tuple_dot(ray->dir, sphere_to_ray);
+	res->c = tuple_dot(sphere_to_ray, sphere_to_ray) - pow(s->raduis / 2, 2);
+	disc = ((res->b * res->b - 4 * res->a * res->c));
 	if (disc < 0)
+	{
+		free(sphere_to_ray);
+		free_res_ray(ray, res);
 		return (NULL);
+	}
 	hit = hit_sphere_create(0, 0, s);
-	hit->t1 = (-b - sqrt(disc)) / 2.0f * a;
-	hit->t2 = (-b + sqrt(disc)) / 2.0f * a;
-	s->hitpoint = tuple_add(sphere_to_ray, multiplyy(ray->dir, hit->t1));
-	// normal = tuple_normalize(s->hitpoint);
-	// lightdir = tuple_normalize(world->light->pos);
-	// double d = max(tuple_dot(normal, tuple_negate(lightdir)), 0.0f);
-	// s->material->color = multiplyy(s->material->color, d);
+	hit->t1 = (-res->b - sqrt(disc)) / (2.0f * res->a);
+	hit->t2 = (-res->b + sqrt(disc)) / (2.0f * res->a);
+	hit = fill_hit(ray, s, sphere_to_ray, hit);
+	free(sphere_to_ray);
+	free_res_ray(ray, res);
 	return (hit);
 }

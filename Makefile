@@ -1,11 +1,11 @@
-CC = gcc
-NAME=minirt
+CC = clang
+NAME=miniRT
 MAKEFLAGS += --no-print-directory
 
 INCLUDE = -I include -I /usr/local/include -I $(LIBFT_DIR) -I $(GNL_DIR)
-MLX_FLAGS=-lmlx -framework OpenGL -framework AppKit
-CFLAGS = $(INCLUDE) -Imlx -O3
-# CFLAGS = $(INCLUDE) -Imlx -Wall -Werror -Wextra -O3
+MLX_FLAGS=-L/usr/local/lib -lmlx -framework OpenGL -framework AppKit
+# CFLAGS = $(INCLUDE) -Imlx -O3
+CFLAGS = $(INCLUDE) -Imlx -Wall -Werror -Wextra -O3
 
 OBJS_DIR = objs/
 
@@ -13,7 +13,7 @@ SRC_DIR = src/
 SRC_FILES = main.c
 
 MLX_DIR = $(SRC_DIR)mlx/
-MLX_FILES = vue.c color.c image.c
+MLX_FILES = vue.c color.c image.c hooks.c
 
 COR_DIR = $(SRC_DIR)core/
 
@@ -35,29 +35,31 @@ TUPLE_FILES = tuple.c add.c sub.c scale.c \
 							dot.c div.c cross.c
 
 UTILS_DIR = $(SRC_DIR)utils/
-UTILS_FILES = float_cmp.c
+UTILS_FILES = float_cmp.c ft_atof.c world_delete.c \
+							deg-to-rad.c
 
 MATRIX_DIR = $(COR_DIR)matrix/
 MATRIX_FILES = compair.c matrix.c mult.c \
 							 transpos.c determinant.c sub-matrix.c \
 							 minor.c delete.c cofactor.c is-invert.c \
-							 invert.c translate.c scale.c rotate.c
+							 invert.c translate.c scale.c rotate.c \
+							 mult2.c
 
 RAY_DIR = $(COR_DIR)ray/
 RAY_FILES = ray.c delete.c at.c transform.c \
 						print.c ray-for-px.c
 
 HIT_DIR = $(RENDERER_DIR)hit/
-HIT_FILES = hit.c sphere.c delete.c cylinder.c plane.c
+HIT_FILES = hit.c sphere.c delete.c cylinder.c plane.c put_intersections.c
 
 ENTITY_DIR = $(RENDERER_DIR)entity/
-ENTITY_FILES = entity.c sphere.c
+ENTITY_FILES = entity.c sphere.c delete.c
 
 LIGHT_DIR = $(RENDERER_DIR)light/
-LIGHT_FILES = lighting.c
+LIGHT_FILES = lighting.c shadows.c
 
 NORMALS_DIR = $(COR_DIR)normals/
-NORMALS_FILES = sphere.c
+NORMALS_FILES = sphere.c cylinder.c plane.c
 
 REFLECTION_DIR = $(COR_DIR)reflection/
 REFLECTION_FILES = reflection.c
@@ -66,11 +68,12 @@ MATERIAL_DIR = $(COR_DIR)material/
 MATERIAL_FILE = material.c
 
 CAMERA_DIR = $(COR_DIR)camera/
-CAMERA_FILES = camera.c transform.c
+CAMERA_FILES = camera.c transform.c delete.c
 
 PARSE_DIR = $(SRC_DIR)parsing/
-PARSER_FILES = parse_ambient.c parse_cam.c parse_cy.c \
-							parse_file.c parse_light.c parse_pl.c parse_sp.c
+PARSER_FILES = parse_ambient.c parse_cam.c parse_cy.c parse_file2.c\
+							parse_file.c parse_light.c parse_pl.c parse_sp.c\
+							parse_file3.c
 
 
 CFILES = $(addprefix $(SRC_DIR), $(SRC_FILES))
@@ -116,7 +119,7 @@ $(NAME): $(OFILES) $(GNL_DIR)$(GNL)
 
 	@echo "$(green)All done, binary file path: ./$(NAME)$(reset)"
 
-fsanitize: CFLAGS += -fsanitize=address -g
+fsanitize: CFLAGS += -fsanitize=leak -g
 fsanitize: all
 	@echo "$(red)fsanitize activated $(reset)"
 

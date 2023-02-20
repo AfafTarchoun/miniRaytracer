@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   is-invert.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/20 10:44:25 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/20 13:12:42 by habouiba         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "matrix.h"
 
-t_bool matrix_is_invertable_n(float **m, int n)
+t_bool	matrix_is_invertable_n(double **m, int n)
 {
-	float det;
+	double	det;
 
 	det = 0;
 	if (n == 4)
@@ -28,17 +28,17 @@ t_bool matrix_is_invertable_n(float **m, int n)
 	return (true);
 }
 
-t_bool matrix_is_invertable_4(float **m)
+t_bool	matrix_is_invertable_4(double **m)
 {
 	return (matrix_is_invertable_n(m, 4));
 }
 
-t_bool matrix_is_invertable_3(float **m)
+t_bool	matrix_is_invertable_3(double **m)
 {
 	return (matrix_is_invertable_n(m, 3));
 }
 
-t_bool matrix_is_invertable_2(float **m)
+t_bool	matrix_is_invertable_2(double **m)
 {
 	return (matrix_is_invertable_n(m, 2));
 }

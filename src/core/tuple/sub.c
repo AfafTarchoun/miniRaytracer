@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   sub.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:01:36 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/16 12:07:12 by habouiba         ###   ########.fr       */
+/*   Updated: 2022/12/26 01:42:41 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "tuple.h"
 
-t_tuple *tuple_sub(t_tuple *t1, t_tuple *t2)
+t_tuple	*tuple_sub(t_tuple *t1, t_tuple *t2)
 {
-	t_tuple *t;
+	t_tuple	*t;
 
 	if (!t1 || !t2)
 		return (NULL);
@@ -29,9 +29,10 @@ t_tuple *tuple_sub(t_tuple *t1, t_tuple *t2)
 	return (t);
 }
 
-t_tuple *tuple_sub_f(t_tuple *t1, t_tuple *t2, void (*f1)(void *), void (*f2)(void *))
+t_tuple	*tuple_sub_f(t_tuple *t1, t_tuple *t2,
+			void (*f1)(void *), void (*f2)(void *))
 {
-	t_tuple *t;
+	t_tuple	*t;
 
 	if (!t1 || !t2)
 		return (NULL);

@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   minor.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:16 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/20 16:47:41 by habouiba         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "matrix.h"
 
-float matrix_minor_3(float **m, int row, int col)
+double	matrix_minor_3(double **m, int row, int col)
 {
-	float **sub;
-	float   minor;
+	double	**sub;
+	double	minor;
 
 	sub = matrix_sub_3(m, row, col);
 	minor = matrix_determinant_2(sub);
@@ -23,10 +23,10 @@ float matrix_minor_3(float **m, int row, int col)
 	return (minor);
 }
 
-float matrix_minor4(float **m, int row, int col)
+double	matrix_minor4(double **m, int row, int col)
 {
-	float **m1;
-	float   minor;
+	double	**m1;
+	double	minor;
 
 	m1 = matrix_sub_3(m, row, col);
 	minor = 0;

@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   dot.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:11:34 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/21 16:07:59 by habouiba         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tuple.h"
 
-float tuple_dot(t_tuple *t1, t_tuple *t2)
+double	tuple_dot(t_tuple *t1, t_tuple *t2)
 {
-	float dot;
+	double	dot;
 
 	dot = t1->x * t2->x + t1->y * t2->y + t1->z * t2->z + t1->w * t2->w;
 	return (dot);

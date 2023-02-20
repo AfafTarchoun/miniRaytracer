@@ -6,26 +6,30 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 14:35:56 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/17 18:02:41 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/05 19:54:05 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "renderer.h"
+#include "parsing/parser.h"
 #include "defs.h"
 #include "hit.h"
 #include "image.h"
 #include "matrix.h"
+#include "mlx.h"
+#include "normals.h"
 #include "point.h"
 #include "ray.h"
+#include "light.h"
 #include <stdio.h>
-#include "mlx.h"
-#include "../../include/parsing/parser.h"
+#include "shadow.h"
 
-t_list *get_all_hits(t_list *objs, t_ray *ray, t_world *world)
+// objs list of t_shape
+t_list	*get_all_hits(t_list *objs, t_ray *ray)
 {
-	t_list   *hits;
-	t_hit    *hit;
-	t_entity *entity;
+	t_list		*hits;
+	t_hit		*hit;
+	t_entity	*entity;
 
 	hits = NULL;
 	while (objs)
@@ -33,7 +37,7 @@ t_list *get_all_hits(t_list *objs, t_ray *ray, t_world *world)
 		hit = 0;
 		entity = objs->content;
 		if (entity->type == SPHERE)
-			hit = ray_sphere_hit(ray, entity->obj, world);
+			hit = ray_sphere_hit(ray, entity->obj);
 		else if (entity->type == CYLINDER)
 			hit = ray_cy_hit(ray, entity->obj);
 		else if (entity->type == PLANE)
@@ -45,57 +49,16 @@ t_list *get_all_hits(t_list *objs, t_ray *ray, t_world *world)
 	return (hits);
 }
 
-void put_intersections(t_hit *hit, t_image *image, int h, int w, t_world *world)
-{
-	t_sphere *sphere;
-	t_entity *shape;
-	t_plane   *plane;
-	t_cylinder *cylinder;
-	t_list *objs;
-
-	objs = world->objs;
-	while (objs)
-	{
-		shape = objs->content;
-		if (shape->type == SPHERE)
-		{
-			sphere = shape->obj;
-			// sphere->material->color = clamp_color(sphere->material->color);
-			// sphere->material->color = colooor(sphere->material->color);
-			// double dist = tuple_dot(tuple_sub(sphere->hitpoint, world->camera->origin), sphere->normal);
-			image_put_pixel(
-				image, w, h,
-				create_trgb(0, sphere->material->color->x, sphere->material->color->y, sphere->material->color->z));
-		}
-		else if (shape->type == PLANE)
-		{
-			plane = shape->obj;
-			// print_tuple(plane->material->color);
-			image_put_pixel(
-				image, w, h,
-				create_trgb(0, plane->material->color->x, plane->material->color->y, plane->material->color->z));
-		}
-		else if (shape->type == CYLINDER)
-		{
-			cylinder = shape->obj;
-			image_put_pixel(
-				image, w, h,
-				create_trgb(0, cylinder->material->color->x, cylinder->material->color->y, cylinder->material->color->z));
-		}
-		objs = objs->next;
-	}
-}
-
 t_image	*__render__(t_vue *vue, t_world *world, t_list ***hits)
 {
-	t_image *image;
-	int      h;
-	int      w;
-	t_hit   *closest_hit;
+	t_image	*image;
+	int		h;
+	int		w;
+	t_hit	*closest_hit;
 
-	h = 0;
+	h = -1;
 	image = image_init(vue, world->camera);
-	while (h < world->camera->hsize)
+	while (++h < world->camera->hsize)
 	{
 		w = 0;
 		while (w < world->camera->wsize)
@@ -103,28 +66,26 @@ t_image	*__render__(t_vue *vue, t_world *world, t_list ***hits)
 			if (!hits[h][w])
 			{
 				w++;
-				continue;
+				continue ;
 			}
 			closest_hit = hit(hits[h][w]);
 			if (closest_hit)
 				put_intersections(closest_hit, image, h, w, world);
 			w++;
 		}
-		h++;
 	}
+	hit_delete_2d_list(hits, world->camera);
 	return (image);
 }
 
-t_image *render(t_world *world, t_vue *vue)
+t_image	*render(t_world *world, t_vue *vue)
 {
-	t_ray    *ray;
-	t_image *image;
-	int       h;
-	int       w;
-	t_list ***hits;
+	t_ray	*ray;
+	int		h;
+	int		w;
+	t_list	***hits;
 
 	h = 0;
-	image = image_init(vue, world->camera);
 	hits = ft_calloc(world->camera->hsize, sizeof(t_list **));
 	while (h < world->camera->hsize)
 	{
@@ -133,7 +94,7 @@ t_image *render(t_world *world, t_vue *vue)
 		while (w < world->camera->wsize)
 		{
 			ray = ray_at_px(world->camera, w, h);
-			hits[h][w] = get_all_hits(world->objs, ray, world);
+			hits[h][w] = get_all_hits(world->objs, ray);
 			ray_delete(ray);
 			w++;
 		}

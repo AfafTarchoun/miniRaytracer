@@ -6,17 +6,18 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/30 12:21:58 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/09 06:45:55 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/07 01:49:33 by habouiba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_H
 #include "../libft/libft.h"
 #include <limits.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#define BUFFER_SIZE 10
 
 char *get_next_line(int fd);
 char *ft_line(int fd, char *backup);
@@ -29,6 +30,4 @@ char *handle_return(char **backup, char **line);
 // size_t ft_strlcat(char *dst, const char *src, size_t dstsize);
 // char  *ft_strdup(const char *s1);
 
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 10
 #endif

@@ -6,17 +6,37 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:07:24 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/15 12:40:56 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/05 18:23:01 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/parsing/parser.h"
 
-void free_tab(char **tab)
+int	check_l(char *line, int fd)
 {
-	int i =0;
+	int	i;
 
-	while(tab[i])
+	i = 0;
+	line = get_next_line(fd);
+	while (line > 0)
+	{
+		if (line[0] == 'L' && line[1] == ' ')
+			i++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	free(line);
+	if (i != 1)
+		return (0);
+	return (1);
+}
+
+void	free_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
 	{
 		free(tab[i]);
 		i++;
@@ -24,33 +44,33 @@ void free_tab(char **tab)
 	free(tab);
 }
 
-t_world *parse_light(char *line, t_world *world)
+t_light	*fill_light(char **tab, char **coord)
 {
-	char **tab;
-	char **coord;
-	char **col;
-	int i;
-	
-	i = 0;
-	world->light = ft_calloc(1, sizeof(t_light));
-	world->light->material = ft_calloc(1, sizeof(t_material));
+	t_light	*light;
+
+	light = ft_calloc(1, sizeof(t_light));
+	light->intensity = ft_atof(tab[2]);
+	light->pos = vector_create(ft_atof(coord[0]),
+			ft_atof(coord[1]), ft_atof(coord[2]));
+	return (light);
+}
+
+t_world	*parse_light(char *line, t_world *world)
+{
+	char	**tab;
+	char	**coord;
+
 	tab = ft_split(line, ' ');
-	coord = ft_split(tab[1], ',');
-	while(coord[i])
-		i++;
-	if(i != 3)
+	tab = test_field(tab, 3);
+	if (comma_check(tab, 2) == 0)
+	{
+		free(tab);
 		return (NULL);
-	i = 0;
-	col = ft_split(tab[3], ',');
-	while(col[i])
-		i++;
-	if(i != 3)
-		return 0;
-	world->light->intensity = (double)atof(tab[2]);
-	world->light->pos = vector_create((double)atof(coord[0]), (double)atof(coord[1]), (double)atof(coord[2]));
-	world->light->material->color = point_create((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
-	free_tab(coord);
+	}
+	coord = ft_split(tab[1], ',');
+	coord = test_field(coord, 3);
+	world->light = fill_light(tab, coord);
 	free_tab(tab);
-	free_tab(col);
+	free_tab(coord);
 	return (world);
 }

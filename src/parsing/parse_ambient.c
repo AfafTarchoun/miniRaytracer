@@ -6,28 +6,80 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:17:44 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/15 00:46:26 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/05 18:22:46 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/parsing/parser.h"
+#include "parsing/parser.h"
 
-t_world *parse_ambient(char *line, t_world *world)
+int	check_a(char *line, int fd)
 {
-	char **tab;
-	char **col;
-	int i;
-	
+	int	i;
+
 	i = 0;
-	world->alight = ft_calloc(1, sizeof(t_a_light));
-	tab = ft_split(line, ' ');
-	col = ft_split(tab[2], ',');
-	while(col[i])
+	line = get_next_line(fd);
+	while (line > 0)
+	{
+		if (line[0] == 'A' && line[1] == ' ')
+			i++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	free(line);
+	if (i != 1)
+		return (0);
+	return (1);
+}
+
+int	comma_check(char **tab, int nb)
+{
+	int	i;
+
+	i = 0;
+	while (tab[nb][i])
+	{
+		if (tab[nb][i] == ',' )
+			return (0);
 		i++;
-	if(i != 3)
-		return NULL;
-	world->alight->ratio = (double)atof(tab[1]);
-	world->alight->material->color = vector_create((double)atof(col[0]), (double)atof(col[1]), (double)atof(col[2]));
+	}
+	return (1);
+}
+
+t_a_light	*fill_alight(char **tab, char **col)
+{
+	t_a_light	*alight;
+
+	alight = ft_calloc(1, sizeof(t_a_light));
+	alight->ratio = ft_atof(tab[1]);
+	alight->material = material();
+	free(alight->material->color);
+	alight->material->color = vector_create(ft_atof(col[0]),
+			ft_atof(col[1]), ft_atof(col[2]));
+	alight->material->color = tuple_div_f(alight->material->color,
+			255, free);
+	return (alight);
+}
+
+t_world	*parse_ambient(char *line, t_world *world)
+{
+	char	**tab;
+	char	**col;
+	int		i;
+
+	i = 0;
+	tab = ft_split(line, ' ');
+	tab = test_field(tab, 3);
+	if (comma_check(tab, 1) == 0)
+	{
+		free(tab);
+		return (NULL);
+	}
+	col = ft_split(tab[2], ',');
+	while (col[i])
+		i++;
+	if (i != 3)
+		return (NULL);
+	world->alight = fill_alight(tab, col);
 	free_tab(col);
 	free_tab(tab);
 	return (world);

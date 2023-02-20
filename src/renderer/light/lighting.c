@@ -6,75 +6,65 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 05:52:15 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/18 08:25:15 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/07 01:40:15 by habouiba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/parsing/parser.h"
+#include "parsing/parser.h"
+#include "light.h"
+#include "reflection.h"
 
-t_light   *point_light(t_point *pos,double intense)
+t_color	*specular(t_lighting *lighting, t_world *w,
+		t_material *m, double reflect_dot_eye)
 {
-    t_light *light;
-    
-    light->pos = pos;
-    light->intensity = intense;
-    return (light);
+	if (reflect_dot_eye <= 0)
+		lighting->specular = color_create(0, 0, 0);
+	else
+	{
+		lighting->specular = tuple_scale(w->alight->material->color,
+				(m->specular * pow(reflect_dot_eye, m->shininess)));
+	}
+	free(lighting->reflectv);
+	return (lighting->specular);
 }
 
-t_tuple *multiplyy(t_tuple *v, float m)
+t_color	*multiply_component(t_lighting *v)
 {
-    t_tuple *w;
+	t_color	*result;
 
-    w = ft_calloc(1, sizeof(t_tuple));
-    if (!w)
-		return (w);
-    w->x = v->x * m;
-    w->y = v->y * m;
-    w->z = v->z * m;
-    return (w);
+	result = tuple_add_f(v->ambient,
+			tuple_add_f(v->diffuse, v->specular, free, free), free, free);
+	free(v->effect);
+	free(v->lightv);
+	free(v);
+	return (result);
 }
 
-void material(t_material *m)
+t_color	*lighting(t_material *m, t_world *w, t_hit *hit, int in_shadow)
 {
-  m->ambient = 0.1;
-  m->deffuse = 0.9;
-  m->specular = 0.9;
-  m->shininess = 200.0;
-}
-// t_color *lighting(t_material *m,t_world *world, t_vector *point, t_vector *eye, t_vector *n)
-t_color *lighting(t_material *m, t_world *world, t_point *point, t_vector *N)
-{
-    t_color *eff_color;
-    t_color *ambient;
-    t_color *diffuse;
-    t_color *specular;
-    t_vector *lightv;
-    t_vector *reflectv;
-    double light_dot_normal;
-    double reflect_dot_normal;
-    double factor;
-    
-    eff_color = multiply(m->color,world->light->intensity);
-    lightv = tuple_normalize(tuple_sub(world->light->pos, point));
-    ambient = multiply(eff_color, m->ambient);
-    light_dot_normal = tuple_dot(lightv, N);
-    if (light_dot_normal < 0)
-    {
-        diffuse = 0;
-        specular = 0;
-    }
-    else
-    {        
-        diffuse = multiply(multiply(eff_color, m->deffuse), light_dot_normal);
-        // reflectv = reflect(tuple_negate(lightv), N);
-        // reflect_dot_normal = tuple_dot(reflectv, world->camera->origin);
-        // if (reflect_dot_normal <= 0)
-        //     specular = 0;
-        // else
-        // {
-        //   factor = pow(reflect_dot_normal, m->shininess);
-        //   // specular = factor * m->specular * world->light->intensity;
-        // }
-    }
-    return (tuple_add(diffuse, ambient));
+	t_lighting	*light;
+	double		light_d;
+	double		reflect_dot_eye;
+
+	light = ft_calloc(1, sizeof(t_lighting));
+	m->ambient = w->alight->ratio;
+	light->effect = hadamard_product(m->color, w->alight->material->color);
+	light->lightv = tuple_normalize_f(tuple_sub(w->light->pos,
+				hit->hitpoint), free);
+	light->ambient = tuple_scale(light->effect, m->ambient);
+	light_d = tuple_dot(light->lightv, hit->norm);
+	if (light_d < 0 || in_shadow)
+	{
+		light->diffuse = color_create(0, 0, 0);
+		light->specular = color_create(0, 0, 0);
+	}
+	else
+	{
+		light->diffuse = tuple_scale(light->effect, (m->deffuse * light_d));
+		light->reflectv = reflect_f(tuple_negate(light->lightv),
+				hit->norm, free, NULL);
+		reflect_dot_eye = tuple_dot(light->reflectv, hit->eyev);
+		light->specular = specular(light, w, m, reflect_dot_eye);
+	}
+	return (multiply_component(light));
 }

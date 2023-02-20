@@ -6,88 +6,80 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 18:31:34 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/13 23:15:48 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/05 21:06:58 by habouiba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#include "../include/parsing/parser.h"
-// #include "camera.h"
-// #include "color.h"
-// #include "entity.h"
-// #include "get_next_line.h"
-// #include "hit.h"
-// #include "image.h"
-// #include "libft.h"
-// #include "material.h"
-// #include "matrix.h"
+#include "parsing/parser.h"
+#include "get_next_line.h"
+#include "image.h"
+#include "libft.h"
 #include "mlx.h"
-// #include "normals.h"
-// #include "point.h"
-// #include "ray.h"
-// #include "reflection.h"
+#include "hooks.h"
 #include "renderer.h"
-// #include "tuple.h"
-// #include "types.h"
-// #include "vector.h"
 #include "vue.h"
-// #include <fcntl.h>
-// #include <math.h>
-// #include <stdio.h>
+#include "utils.h"
+#include "world.h"
+#include "shadow.h"
 
-void print_usage()
+void	print_usage(void)
 {
 	ft_putendl_fd("usage: ./minirt filename.rt", 2);
 }
 
-t_world *parse_file(char *file, t_world *scene)
+int	check_extension(char *str)
 {
-    int fd;
-    char *line;
-    fd = open(file, O_RDONLY);
-    if (fd < 0)
-    {
-        printf("error\n");
-        return(0);
-    }
-    while((line = get_next_line(fd)) > 0)
-    {
-        if ((line[0] != '\0'))
-		{
-			scene = parse_line(line, scene);
-			if(!scene)
-				return NULL;
-		}
-        free(line);
-    }
-    close(fd);
-    return(scene);
+	char	*ext;
+
+	if (!ft_strcmp(str, ".rt"))
+		return (0);
+	ext = ft_strrchr(str, '.');
+	if (!ext)
+		return (0);
+	if (!ft_strcmp(ext, ".rt"))
+		return (1);
+	return (0);
 }
 
-int main(int argc, char *argv[])
+t_world	*parser(t_world *world, char *str)
 {
-	t_world *world;
-	t_vue   *vue;
-	t_image *image;
-
-	if (argc != 2)
+	if (handle_cam(str) != 1)
 	{
-		print_usage();
-		return (1);
+		printf("Error: Camera none existing or wrong\n");
+		return (0);
 	}
-	if (handle_cam(argv[1])!= 1)
+	if (error_management(str) != 1)
 		return (0);
-	if (error_management(argv[1])!= 1)
-		return (0);
-	vue = vue_init();
 	world = ft_calloc(1, sizeof(t_world));
-	world = parse_file(argv[1], world);
-	if(!world)
-		return 0;
+	world = parse_file(str, world);
+	return (world);
+}
+
+void	error_print(void)
+{
+	printf("Error: File information none existing or wrong\n");
+	exit(1);
+}
+
+int	main(int argc, char *argv[])
+{
+	t_world	*world;
+	t_vue	*vue;
+	t_image	*image;
+
+	if (argc != 2 || !check_extension(argv[1]))
+		error_print();
+	vue = vue_init();
+	world = NULL;
+	world = parser(world, argv[1]);
+	if (!world)
+		error_print();
 	image = render(world, vue);
+	world_delete(world);
 	mlx_put_image_to_window(vue->mlx, vue->window, image->img, 0, 0);
+	free(image);
+	mlx_hook(vue->window, 17, 0, x_exit, 0);
+	mlx_hook(vue->window, 2, 1L << 0, key_hook, 0);
 	mlx_loop(vue->mlx);
-	free(world);
-	system("leaks minirt");
 	return (0);
 }

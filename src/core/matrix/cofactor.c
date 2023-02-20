@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cofactor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: habouiba <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:10:04 by habouiba          #+#    #+#             */
-/*   Updated: 2022/11/20 17:27:56 by habouiba         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "matrix.h"
 #include "utils.h"
 
-float matrix_cofactor_3(float **m, int row, int col)
+double	matrix_cofactor_3(double **m, int row, int col)
 {
-	float minor;
+	double	minor;
 
 	minor = matrix_minor_3(m, row, col);
 	if ((row + col) % 2 == 0)
@@ -24,10 +24,10 @@ float matrix_cofactor_3(float **m, int row, int col)
 	return (-minor);
 }
 
-float matrix_cofactor_4(float **m, int row, int col)
+double	matrix_cofactor_4(double **m, int row, int col)
 {
-	float **m1;
-	float   det;
+	double	**m1;
+	double	det;
 
 	m1 = matrix_sub_4(m, row, col);
 	det = matrix_determinant_3(m1);

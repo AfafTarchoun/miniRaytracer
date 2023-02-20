@@ -6,19 +6,19 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/20 11:57:26 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/09 07:40:34 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "matrix.h"
 
-float **matrix_invert_4(float **m)
+double	**matrix_invert_4(double **m)
 {
-	float **invert_m;
-	int     row;
-	int     col;
-	float   det;
-	float   cofactor;
+	double	**invert_m;
+	int		row;
+	int		col;
+	double	det;
+	double	cofactor;
 
 	if (matrix_is_invertable_n(m, 4) == false)
 		return (NULL);

@@ -6,172 +6,100 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 08:39:17 by atarchou          #+#    #+#             */
-/*   Updated: 2022/12/13 23:55:52 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/05 19:49:46 by habouiba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/parsing/parser.h"
+#include "parsing/parser.h"
 
-t_world *parse_line(char *line, t_world *scene)
+void	*return_error(void)
 {
-	t_entity *shape;
+	printf("error\n");
+	exit (1);
+}
 
-	shape = NULL;
+t_world	*parse_scene(char *line, t_world *scene)
+{
 	if (line[0] == 'C')
 	{
 		scene = parse_cam(line, scene);
-		if(!scene)
-			return (NULL);
+		if (!scene)
+			error_print();
 	}
 	else if (line[0] == 'A')
-	{		
+	{
 		scene = parse_ambient(line, scene);
-		if(!scene)
-			return (NULL);
+		if (!scene)
+			error_print();
 	}
 	else if (line[0] == 'L')
 	{		
-		scene = parse_light(line,scene);
-		if(!scene)
-			return (NULL);
+		scene = parse_light(line, scene);
+		if (!scene)
+			error_print();
 	}
-	else if (line[0] == 's' && line[1] == 'p')
+	return (scene);
+}
+
+t_entity	*parse_entity(char *line, t_entity *shape)
+{
+	if (line[0] == 's' && line[1] == 'p')
 	{
 		shape = parse_sphere(line);
 		if (!shape)
-			return NULL;
+			error_print();
 	}
 	else if (line[0] == 'p' && line[1] == 'l')
 	{
 		shape = parse_plane(line);
 		if (!shape)
-			return NULL;
+			error_print();
 	}
 	else if (line[0] == 'c' && line[1] == 'y')
 	{
 		shape = parse_cylinder(line);
 		if (!shape)
-			return NULL;
+			error_print();
 	}
+	return (shape);
+}
+
+t_world	*parse_line(char *line, t_world *scene)
+{
+	t_entity	*shape;
+
+	shape = NULL;
+	scene = parse_scene(line, scene);
+	shape = parse_entity(line, shape);
 	if (shape != NULL)
 		ft_lstadd_back(&scene->objs, ft_lstnew(shape));
 	return (scene);
 }
 
-int	ft_isdouble(char *src)
+t_world	*parse_file(char *file, t_world *scene)
 {
-	int	i;
-	int	decimal_point;
+	int		fd;
+	char	*line;
 
-	i = 0;
-	if (*src == '-')
-		i++;
-	decimal_point = 0;
-	while (*(src + i) != '\0')
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
 	{
-		if (ft_isdigit(*(src + i)))
-			;
-		else if (decimal_point == 0 && *(src + i) == '.')
-			decimal_point = 1;
-		else
-		{
-			return (0);
-		}
-		i++;
+		printf("eerror\n");
+		return (0);
 	}
-	return (1);
-}
-
-char *no_newline(char *line)
-{
-	int i;
-	char *new;
-	
-	i = 0;
-	while (line[i] && line[i] != '\n')
-		i++;
-	new = malloc(sizeof(char) * (i + 1));
-	i = -1;
-	while (line[++i] && line[i] != '\n')
-		new[i] = line[i];
-	new[i] = 0;
-	return new;
-}
-
-int check_fields_comma(char *line, int nb)
-{
-	char **fields;
-	char **info;
-	char *new;
-	int i;
-	int j;
-	
-	i = 0;
-	new = no_newline(line);
-	fields = ft_split(new, ' ');
-	while(fields[i])
-		i++;
-	if (i != nb + 1)
-		return(0);
-	i = 1;
-	while(i <= nb)
+	line = get_next_line(fd);
+	while (line > 0)
 	{
-		info = ft_split(fields[i], ',');
-		j = 0;
-		while (info[j])
+		if ((line[0] != '\0'))
 		{
-			if (!ft_isdouble(info[j]))
-				return (0);
-			j++;
-		}
-		i++;
-	}
-	free_tab(fields);
-	free_tab(info);
-	free(new);
-	return (1);
-}
-
-int error_management(char *file)
-{
-    int fd;
-    char *line;
-
-    fd = open(file, O_RDONLY);
-    if (fd < 0)
-    {
-        printf("error\n");
-        return(0);
-    }
-    while((line = get_next_line(fd)) > 0)
-    {
-		if (line[0] == 'L' && !check_fields_comma(line, 3))
-		{
-			free(line);
-			return (0);
-		}
-		else if (line[0] == 'A' && !check_fields_comma(line, 2))
-		{
-			free(line);
-			return (0);
-		}
-		if (line[0] == 's' && line[1] == 'p' && !check_fields_comma(line, 3))
-		{
-			free(line);
-			return (0);
-		}
-		else if (line[0] == 'p' && line[1] == 'l' && !check_fields_comma(line, 3))
-		{
-			free(line);
-			return (0);
-		}
-		else if (line[0] == 'c' && line[1] == 'y' && !check_fields_comma(line, 5))
-		{
-			free(line);
-			return (0);
+			scene = parse_line(line, scene);
+			if (!scene)
+				return (NULL);
 		}
 		free(line);
-    }
-    close(fd);
-    return(1);
+		line = get_next_line(fd);
+	}
+	free(line);
+	close(fd);
+	return (scene);
 }

@@ -6,61 +6,60 @@
 /*   By: atarchou <atarchou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 16:48:00 by habouiba          #+#    #+#             */
-/*   Updated: 2022/12/09 07:34:07 by atarchou         ###   ########.fr       */
+/*   Updated: 2023/01/07 00:08:36 by atarchou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "matrix.h"
 
-float **matrix_create_4()
+double	**matrix_create_4(void)
 {
-	float **matrix;
-	int     i;
+	double	**matrix;
+	int		i;
 
-	matrix = ft_calloc(4, sizeof(float *));
+	matrix = ft_calloc(4, sizeof(double *));
 	i = 0;
 	while (i < 4)
 	{
-		matrix[i] = ft_calloc(4, sizeof(float));
+		matrix[i] = ft_calloc(4, sizeof(double));
 		i++;
 	}
 	return (matrix);
 }
 
-float **matrix_create_3()
+double	**matrix_create_3(void)
 {
-	float **matrix;
-	int     i;
+	double	**matrix;
+	int		i;
 
-	matrix = ft_calloc(3, sizeof(float *));
+	matrix = ft_calloc(3, sizeof(double *));
 	i = 0;
 	while (i < 3)
 	{
-		
-		matrix[i] = ft_calloc(3, sizeof(float));
+		matrix[i] = ft_calloc(3, sizeof(double));
 		i++;
 	}
 	return (matrix);
-};
+}
 
-float **matrix_create_2()
+double	**matrix_create_2(void)
 {
-	float **matrix;
-	int     i;
+	double	**matrix;
+	int		i;
 
-	matrix = ft_calloc(2, sizeof(float *));
+	matrix = ft_calloc(2, sizeof(double *));
 	i = 0;
 	while (i < 2)
 	{
-		matrix[i] = ft_calloc(2, sizeof(float));
+		matrix[i] = ft_calloc(2, sizeof(double));
 		i++;
 	}
 	return (matrix);
-};
+}
 
-float **matrix_identity_4(void)
+double	**matrix_identity_4(void)
 {
-	float **matrix;
+	double	**matrix;
 
 	matrix = matrix_create_4();
 	matrix[0][0] = 1;

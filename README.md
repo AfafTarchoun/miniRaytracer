@@ -1,6 +1,5 @@
-# miniRT - My First RayTracer with miniLibX
+# 🔵 miniRT - My First RayTracer with miniLibX
 
-![miniRT](minirt_image.jpg)
 
 ## Introduction
 
@@ -37,23 +36,23 @@ Here are some sample images generated with miniRT:
 
 ### Basic Sphere
 
-![Basic Sphere](basic_sphere.jpg)
+![Basic Sphere](screenshots/sphere.png)
 
 ### Basic Cylinder
 
-![Basic Cylinder](basic_cylinder.jpg)
+![Basic Cylinder](screenshots/cylinder.png)
 
 ### Basic Plane
 
-![Basic Plane](basic_plane.jpg)
+![Basic Plane](screenshots/plane.png)
 
 ### Two Spheres Intertwined
 
-![Two Spheres Intertwined](two_spheres.jpg)
+![Two Spheres Intertwined](screenshots/doublesphere.png)
 
 ### Complex Scene
 
-![Complex Scene](complex_scene.jpg)
+![Complex Scene](screenshots/complex.png)
 
 ## Getting Started
 

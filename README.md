@@ -59,7 +59,7 @@ Here are some sample images generated with miniRT:
 1. Clone the miniRT repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/miniRT.git
+git clone https://github.com/AfafTarchoun/minirt.git
 cd miniRT
 ```
 2. Compile the project using the provided Makefile and Run the program with a scene description file:
